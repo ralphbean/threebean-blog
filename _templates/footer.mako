@@ -1,13 +1,10 @@
-<p id="credits">
-Powered by <a href="http://www.blogofile.com">Blogofile</a>.<br/>
-<br/>
-RSS feeds for <a href="${bf.util.site_path_helper(bf.config.blog.path,'feed')}">Entries</a>
-% if bf.config.blog.disqus.enabled:
- and <a
-href="http://${bf.config.blog.disqus.name}.disqus.com/latest.rss">Comments</a>.
-% endif
-<br>
-</p>
+<div class="push"></div>
+
+<div class="footer">
+<p>This is the blog of Ralph Bean -
+<a href="http://threebean.org">[three]Bean.org</a>.</p>
+</div>
+
 % if bf.config.blog.disqus.enabled:
 <script type="text/javascript">
 //<![CDATA[

@@ -14,9 +14,7 @@
           ${next.body()}
         </div><!-- End Prose Block -->
       </div><!-- End Main Block -->
-      <div id="footer">
-        ${self.footer()}
-      </div> <!-- End Footer -->
+      <%include file="footer.mako" />
     </div> <!-- End Content -->
   </body>
 </html>
@@ -27,7 +25,4 @@
   <%include file="header.mako" />
 </%def>
 <%def name="footer()">
-  <hr/>
-  This is a footer that appears on every page.
-  <%include file="footer.mako" />
 </%def>
