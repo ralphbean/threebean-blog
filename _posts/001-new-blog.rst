@@ -1,5 +1,5 @@
 ---
-categories: misc, blogophile
+categories: misc, blogofile
 date: 2012/02/14 15:00:00
 permalink: http://threebean.org/blog/first-post
 title: Migrating from wordpress
