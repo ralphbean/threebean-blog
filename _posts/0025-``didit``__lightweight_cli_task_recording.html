@@ -1,0 +1,34 @@
+---
+categories: code, python
+date: 2011/05/05 20:20:28
+permalink: http://threebean.org/blog/2011/05/05/didit-lightweight-cli-task-recording/
+tags: code, python
+title: '``didit`` -- lightweight CLI task recording'
+---
+<p>I wrote and published <a href="http://pypi.python.org/pypi/didit">didit</a>
+this afternoon.  I hope you find it useful for the same reasons I wrote it.</p>
+
+$$code(lang=text, style=monokai)
+% didit-remember -c work -m 'Wrote `diddit`.  Thank god.'
+% didit-remember --message 'Helped L. User parallelize his ``Mathematica`` code.'
+% didit-remember -c personal       # <-- This launches `vim` for me!
+
+% didit-report --categories=work,general,personal
+Category 'work, general, personal' over timespan 'week'
+-------------------------------------------------------
+
+----
+
+2011-05-05:
+
+  - Wrote `diddit`.  Thank god.
+  - Helped L. User parallelize his ``Mathematica`` code.
+  - Drank a beer.
+
+$$/code
+
+<p>One of the upshots of using <code>.rst</code>:</p>
+
+$$code(lang=text, style=monokai)
+% didit-report --category=work > thisweek.rst &amp;&amp; rst2pdf thisweek.rst
+$$/code

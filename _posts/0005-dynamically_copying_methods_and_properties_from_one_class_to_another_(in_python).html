@@ -1,0 +1,64 @@
+---
+categories: code, python
+date: 2011/01/27 15:06:28
+permalink: http://threebean.org/blog/2011/01/27/dynamically-copying-methods-and-properties-from-one-class-to-another-in-python/
+tags: code, python
+title: dynamically copying methods and properties from one class to another (in python)
+---
+<p>Here's a little generalization on the previous post <a
+  href="http://threebean.wordpress.com/2011/01/27/dynamically-reassigning-methods-from-one-class-to-another-in-python-dunder-func-who-knew/">on
+  reassigning methods</a>.</p>
+
+$$code(lang=python, style=monokai)
+#!/usr/bin/python
+
+import warnings
+import types
+
+class Foo(object):
+    def __init__(self, id):
+        self.id = id
+
+    def bar(self):
+        print self.id
+
+    @property
+    def baz(self):
+        print self.id
+
+class Oof(object):
+    def __init__(self, id):
+        self.id = id
+
+def copy_methods_and_properties(cls1, cls2):
+    for attr in dir(cls1):
+        fattr = getattr(cls1, attr)
+
+        # only copy methods and properties
+        if type(fattr) not in [types.UnboundMethodType, property]:
+            continue
+
+        # Don't erase methods that cls2 already has
+        if hasattr(cls2, attr):
+            continue
+
+        if isinstance(fattr, property):
+            setattr(cls2, attr, property(fattr.fget, fattr.fset, fattr.fdel))
+        elif isinstance(fattr, types.UnboundMethodType):
+            setattr(cls2, attr, fattr.__func__)
+
+    return cls2
+
+
+if __name__ == '__main__':
+    Oof = copy_methods_and_properties(Foo, Oof)
+
+    f = Foo(52)
+    o = Oof(10)
+
+    f.bar()
+    o.bar()
+
+    f.baz
+    o.baz
+$$/code    

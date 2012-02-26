@@ -1,0 +1,614 @@
+---
+categories: code, grid, jqplotwidget, jquery, python, turbogears
+date: 2011/04/30 06:39:36
+permalink: http://threebean.org/blog/2011/04/30/tutorial-melting-your-face-off-with-tw2-and-turbogears2-1/
+tags: code, grid, jqplotwidget, jquery, python, turbogears
+title: Tutorial -- melting your face off with tw2 and TurboGears2.1
+---
+<div class="wp-caption alignright" id="attachment_269" style="width: 310px;"><a
+    href="http://threebean.files.wordpress.com/2011/04/crazyfort.jpg"><img
+    alt="" class="size-medium wp-image-269" height="225"
+    src="http://threebean.files.wordpress.com/2011/04/crazyfort.jpg?w=300&#038;h=225"
+    title="crazyfort" width="300" /></a><p
+  class="wp-caption-text"><div><span>Maunsell Fort tower</span> (<a
+      href="http://www.geograph.org.uk/profile/850"
+      rel="cc:attributionurl">Hywel Williams</a>) / <a
+      href="http://creativecommons.org/licenses/by-sa/2.0/" rel="license">CC
+      BY-SA 2.0</a></div></div>
+
+
+<p><strong><em>Get the source:</em></strong> if you don't want to read through
+this, you can get the entire source for this tutorial <a
+  href="https://github.com/ralphbean/tw2-facemelt-tg2.1" target="_blank">here on
+  my github account</a>.</p>
+
+---
+
+<p>Today it's an epic data widgets tutorial!  I've been working on a lot of
+stuff recently, including <a
+  href="http://groups.google.com/group/toscawidgets-discuss/browse_thread/thread/e13af6f62464e54e"
+  target="_blank">trying to pull some of the more quiet tw2 developers back
+  together</a>; I hope that this fits into that scheme and to at some point link
+directly to this tutorial from the <code>tw2</code> documentation.</p>
+
+<p>This tutorial won't introduce you to any of <code>tw2.core</code>
+fundamentals directly, but it <strong>will</strong> show off some of the
+<em>flashier</em> and <em>data-driven</em> widgets.  If it gets you real hot,
+check out some of my other tw2+TurboGears2.1 tutorials <a
+  href="http://threebean.wordpress.com/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/"
+  target="_blank">here</a> and <a
+  href="http://threebean.wordpress.com/2010/10/24/python-wsgi-protovis-barcamproc-fall-2010/"
+  target="_blank">here</a> and my tw2+Pyramid tutorial <a
+  href="http://threebean.wordpress.com/2011/03/07/sqlaradialgraph-in-a-pyramid-app/"
+  target="_blank">here</a>, but enough of that, let's cut to the chase:</p>
+
+<h2>Agenda</h2>
+<p>We're going to build an TurboGears2.1 application from start to finish that
+logs the IP of every request made of it and displays those hits with a couple of
+fancy-ass <code>tw2</code> widgets.  Here's what it's going to take:</p>
+
+<ul>
+<li>Getting TurboGears2.1 installed and running</li>
+<li>Setting up a data backend</li>
+<li>"Automatically" listing db entries with <code>tw2.jqplugins.jqgrid:SQLAjqGridWidget</code></li>
+<li>Plotting server history with <code>tw2.jqplugins.jqplot:JQPlotWidget</code></li>
+<li>Making the layout look like <a href="http://google.com/ig" target="_blank">http://google.com/ig</a> with <code>tw2.jqplugins.portlets</code></li>
+</ul>
+
+<h2>1.  Getting TurboGears2.1 installed and running</h2>
+<p><strong>Install</strong> (if you haven't already) <a
+  href="http://www.doughellmann.com/projects/virtualenvwrapper/"
+  target="_blank">virtualenvwrapper</a>.  It's awesome and you should use it
+always.</p>
+
+<p>Next, <strong>Open</strong> up your favorite terminal and do the
+following:</p>
+$$code(lang=text, style=monokai)
+% mkdir tw2-facemelt-tg2.1 &amp;&amp; cd tw2-facemelt-tg2.1
+% mkvirtualenv --no-site-packages --distribute tw2-facemelt-tg2.1
+% pip install --use-mirrors tg.devtools
+% paster quickstart
+        Enter project name: tw2-facemelt-tg2.1
+        Enter package name [tw2facemelttg21]:
+        Would you prefer mako templates? (yes/[no]): yes
+        Do you need authentication and authorization in this project? ([yes]/no): yes
+% cd tw2-facemelt-tg2.1
+$$/code
+
+<p>At this point we need to modify the freshly quickstarted TurboGears 2.1
+project.  There's a bug there!  We said want to use <code>mako</code> templates,
+so TG2.1 isn't configured to install <code>genshi</code> but it
+<strong>does</strong> include references to the
+<code>tgext.admin.controller:AdminController</code> which references
+<code>genshi</code> but doesn't list its dependency and therefore doesn't
+install it.  That's fine, we'll just remove the references to the
+<code>AdminController</code> since we won't be using it, anyways.</p>
+
+<p><strong>Remove</strong> the following three lines from
+<code>tw2facemelttg21/controllers/root.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+from tgext.admin.tgadminconfig import TGAdminConfig
+from tgext.admin.controller import AdminController
+
+...
+
+    admin = AdminController(model, DBSession, config_type=TGAdminConfig)
+$$/code
+
+<p>While we're at it, let's turn on the <code>tw2</code> WSGI middleware.</p>
+
+<p>Edit <code>tw2facemelttg21/config/app_cfg.py</code> and <strong>add</strong>
+the following two lines at the bottom:</p>
+
+$$code(lang=python, style=monokai)
+base_config.use_toscawidgets = False
+base_config.use_toscawidgets2 = True
+$$/code
+
+<p>It should be noted that toscawidgets1 (setup by TG2.1 by default) and
+toscawidgets2 can peacefully coexist in a WSGI app but I'm a <code>tw2</code>
+purist.  After all, <a href="https://github.com/ralphbean/tw2-benchmark"
+  target="_blank">tw2 is faster</a>.</p>
+
+<p>At this point you should be able to run your TG2.1 quickstarted app.
+<strong>Run</strong> the following:</p>
+
+$$code(lang=text, style=monokai)
+% pip install --use-mirrors -e .
+% paster setup-app development.ini
+% paster serve development.ini
+$$/code
+
+<p>And <strong>visit</strong> <a href="http://localhost:8080"
+  target="_blank">http://localhost:8080</a> to verify that all this worked.</p>
+
+<h2>2.  Setting up a data backend</h2>
+
+<p><strong>Create</strong> a file at
+<code>tw2facemelttg21/models/bloglog.py</code> with the following contents:</p>
+
+$$code(lang=python, style=monokai)
+# -*- coding: utf-8 -*-
+""" Logs of Bob Loblaw's Law Blog """
+
+from sqlalchemy import *
+from sqlalchemy.orm import mapper, relation
+from sqlalchemy import Table, ForeignKey, Column
+from sqlalchemy.types import Integer, Unicode
+#from sqlalchemy.orm import relation, backref
+
+from datetime import datetime
+
+from tw2facemelttg21.model import DeclarativeBase, metadata, DBSession
+
+
+class ServerHit(DeclarativeBase):
+    __tablename__ = 'server_hit'
+
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, nullable=False, default=datetime.now)
+
+    remote_addr = Column(Unicode(15), nullable=False)
+
+    path_info = Column(Unicode(1024), nullable=False)
+    query_string = Column(Unicode(1024), nullable=False)
+$$/code
+
+<p><strong>Edit</strong> the module-level file
+<code>tw2facemelttg21/models/__init__.py</code> and <strong>uncomment</strong>
+the following line:</p>
+
+$$code(lang=python, style=monokai)
+DeclarativeBase.query = DBSession.query_property()
+$$/code
+
+<p><strong>Add</strong> the following line to the very bottom of <em>the same
+  file</em> (<code>tw2facemelttg21/models/__init__.py</code>):</p>
+$$code(lang=python, style=monokai)
+from bloglog import ServerHit
+$$/code
+
+<p>The data model should be good to go now, but let's add one little piece of
+code --- a hook --- that will populate the <code>server_hit</code> table as the
+app runs.</p>
+
+<p><strong>Edit</strong> <code>tw2facemelttg21/lib/base.py</code> and add the
+following seven-line chunk just inside the <code>__call__(...)</code> method of
+your <code>BaseController</code> </p>
+
+$$code(lang=python, style=monokai)
+    def __call__(self, environ, start_response):
+        """Invoke the Controller"""
+        # TGController.__call__ dispatches to the Controller method
+        # the request is routed to. This routing information is
+        # available in environ['pylons.routes_dict']
+
+        entry = model.ServerHit(
+            remote_addr=environ['REMOTE_ADDR'],
+            path_info=environ['PATH_INFO'],
+            query_string=environ['QUERY_STRING'],
+        )
+        model.DBSession.add(entry)
+        model.DBSession.flush()
+
+        request.identity = request.environ.get('repoze.who.identity')
+        tmpl_context.identity = request.identity
+        return TGController.__call__(self, environ, start_response)
+$$/code
+
+
+<p>Now <strong>blow away</strong> and <strong>recreate</strong> your old sqlite
+database by typing the following into your trusty terminal:</p>
+
+$$code(lang=text, style=monokai)
+% rm devdata.db
+% paster setup-app development.ini
+% paster serve development.ini
+$$/code
+
+<p>Pray for no bugs as you <strong>revisit</strong> <a
+  href="http://localhost:8080" target="_blank">http://localhost:8080</a>.
+Reload the page a few times and just double-check that your database has entries
+in it now by running <code>sqlite3 devdata.db</code>.  Issue the command
+<code>select * from server_hit;</code> and you should see all your page requests
+listed.</p>
+
+<p>Cool?  Cool.</p>
+
+<p>(<em><strong>Note to the brave</strong></em>:  If we wanted to be
+<strong>really</strong> awesome, we would write WSGI <em>middleware</em> to do
+our request-logging.)</p>
+
+<h2>3.  "Automatically" listing db entries with <code>tw2.jqplugins.jqgrid:SQLAjqGridWidget</code></h2>
+
+<p><strong>Create</strong> a new file <code>tw2facemelttg21/widgets.py</code>
+with the following content:</p>
+
+$$code(lang=python, style=monokai)
+import tw2facemelttg21.model as model
+from tw2.jqplugins.jqgrid import SQLAjqGridWidget
+
+class LogGrid(SQLAjqGridWidget):
+    id = 'awesome-loggrid'
+    entity = model.ServerHit
+    excluded_columns = ['id']
+    datetime_format = "%x %X"
+
+    prmFilter = {'stringResult': True, 'searchOnEnter': False}
+
+    options = {
+        'pager': 'awesome-loggrid_pager',
+        'url': '/jqgrid/',
+        'rowNum':15,
+        'rowList':[15,150, 1500],
+        'viewrecords':True,
+        'imgpath': 'scripts/jqGrid/themes/green/images',
+        'shrinkToFit': True,
+        'height': 'auto',
+    }
+$$/code
+
+<p><strong>Pull</strong> the <code>LogGrid</code> widget into your controller by
+importing it at the top of <code>tw2facemelttg21/controllers/root.py</code>
+with:</p>
+$$code(lang=python, style=monokai)
+from tw2facemelttg21.widgets import LogGrid
+$$/code
+
+<p><strong>Modify</strong> the <code>index</code> method of your
+<code>RootController</code> in <code>tw2facemelttg21/controllers/root.py</code>
+so that it looks like:</p>
+
+$$code(lang=python, style=monokai)
+@expose('tw2facemelttg21.templates.index')
+def index(self):
+    """Handle the front-page."""
+    return dict(page='index', gridwidget=LogGrid)
+$$/code
+
+<p>This will make the LogGrid available in your index template under the name
+<code>gridwidget</code>.  We still need to display it there.</p>
+
+<p><strong>Edit</strong> <code>tw2facemelttg21/templates/index.mak</code> and
+wipe out <em>all</em> of the content.  Replace it with <em>only</em> the
+following:</p>
+
+$$code(lang=html, style=monokai)
+<%inherit file="local:templates.master"/>
+${gridwidget.display() | n}
+$$/code
+
+<p>Cool.</p>
+
+<p>The <code>SQLAjqGridWidget</code> has a <code>request(...)</code> method that
+does all of its magic (interrogating your <code>sqlalchemy</code> model for its
+properties and values).  We still need to wire up our TurboGears app to forward
+the <em>ajax<->json</em> requests to the right place.<p>
+
+<p>To do this, <strong>add</strong> another method to your
+<code>RootController</code> back in
+<code>tw2facemelttg21/controllers/root.py</code> that looks like this:</p>
+
+$$code(lang=python, style=monokai)
+@expose('json')
+def jqgrid(self, *args, **kwargs):
+    return LogGrid.request(request).body
+$$/code
+
+<p>Lastly, <strong>edit</strong> your <code>setup.py</code> file and
+<strong>add</strong> <em>all</em> the new widget dependencies we'll need (not
+just the <code>jqgrid</code>), like so:</p>
+
+$$code(lang=python, style=monokai)
+    install_requires=[
+        "TurboGears2 >= 2.1",
+        "Mako",
+        "zope.sqlalchemy >= 0.4",
+        "repoze.tm2 >= 1.0a5",
+        "repoze.what-quickstart",
+        "repoze.what >= 1.0.8",
+        "repoze.what-quickstart",
+        "repoze.who-friendlyform >= 1.0.4",
+        "repoze.what-pylons >= 1.0",
+        "repoze.what.plugins.sql",
+        "repoze.who == 1.0.18",
+        "tgext.admin >= 0.3.9",
+        "tw.forms",
+        "tw2.jqplugins.jqgrid",
+        "tw2.jqplugins.jqplot",
+        "tw2.jqplugins.portlets",
+        ],
+    setup_requires=["PasteScript >= 1.7"],
+$$/code
+
+<p><strong>Install</strong> the newly listed dependencies by running:</p>
+
+$$code(lang=text, style=monokai)
+% python setup.py develop
+% paster serve development.ini
+$$/code
+
+<p>...and revisit <a href="http://localhost:8080"
+  target="_blank">http://localhost:8080</a>.</p>
+
+<p>At this point, your app should look something like the following:</p>
+
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot1.png"><img alt="" class="size-medium wp-image-292" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot1.png?w=300" title="screenshot1" width="300" /></a>
+
+<p>We should really (probably) do things as fancy as we can, and make use of
+jquery-ui's themes.</p>
+
+<p><strong>Edit</strong> <code>tw2facemelttg21/lib/base.py</code> do the
+following two things:</p>
+
+<p><strong>Add</strong> this <code>import</code> statement to the top of the
+file.</p>
+$$code(lang=python, style=monokai)
+from tw2.jqplugins.ui import set_ui_theme_name
+$$/code
+
+<p>And <strong>invoke</strong> it from <em>inside</em> the
+<code>__call__(...)</code> method of your <code>BaseController</code> like
+so:</p>
+
+$$code(lang=python, style=monokai)
+    def __call__(self, environ, start_response):
+        """Invoke the Controller"""
+        # TGController.__call__ dispatches to the Controller method
+        # the request is routed to. This routing information is
+        # available in environ['pylons.routes_dict']
+
+        set_ui_theme_name('hot-sneaks')
+
+        entry = model.ServerHit(
+            remote_addr=environ['REMOTE_ADDR'],
+            path_info=environ['PATH_INFO'],
+            query_string=environ['QUERY_STRING'],
+        )
+        model.DBSession.add(entry)
+
+        request.identity = request.environ.get('repoze.who.identity')
+        tmpl_context.identity = request.identity
+        return TGController.__call__(self, environ, start_response)
+$$/code 
+
+<p>Nice!  But <code>hot-sneaks</code> isn't the only available theme -- you can
+see a list of all of them <a
+  href="https://github.com/ralphbean/tw2.jqplugins.ui/blob/master/tw2/jqplugins/ui/base.py#L37"
+  target="_blank">right here</a>.</p>
+
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot2.png"><img alt="" class="size-medium wp-image-295" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot2.png?w=300" title="screenshot2" width="300" /></a>
+
+<h2>4.  Plotting server history with <code>tw2.jqplugins.jqplot:JQPlotWidget</code></h2>
+
+<p>This is going to be awesome.</p>
+
+<p><strong>Add</strong> a new widget definition to
+<code>tw2facemelttg21/widgets.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+from tw2.jqplugins.jqplot import JQPlotWidget
+from tw2.jqplugins.jqplot.base import categoryAxisRenderer_js, barRenderer_js
+from tw2.core import JSSymbol
+
+class LogPlot(JQPlotWidget):
+    id = 'awesome-logplot'
+    interval = 2000
+    resources = JQPlotWidget.resources + [
+        categoryAxisRenderer_js,
+        barRenderer_js,
+    ]
+
+    options = {
+        'seriesDefaults' : {
+            'renderer': JSSymbol('$.jqplot.BarRenderer'),
+            'rendererOptions': { 'barPadding': 4, 'barMargin': 10 }
+        },
+        'axes' : {
+            'xaxis': {
+                'renderer': JSSymbol(src="$.jqplot.CategoryAxisRenderer"),
+            },
+            'yaxis': {'min': 0, },
+        }
+    }
+$$/code
+<p>Now we're going to go to town on our <code>RootController</code>.  We need
+to:</p>
+<ul>
+<li>Make the new widget available in our template</li>
+<li>Produce data for it</li>
+<li>Render it in the template</li>
+</ul>
+
+<p>First, <strong>add</strong> the following imports to the top of
+<code>tw2facemelttg21/controllers/root.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+from tw2facemelttg21.models import ServerHit
+from tw2facemelttg21.widgets import LogPlot
+
+import sqlalchemy
+import datetime
+import time
+$$/code
+
+<p>We're also going to need this little <code>recursive_update</code> utility to
+merge the <code>options<code> <code>dict</code>s.  Just add it at the top of
+    <code>tw2facemelttg21/controllers/root.py</code> as a <em>function</em>.  It
+    should <strong>not</strong> be a method of <code>RootController</code>.</p>
+
+$$code(lang=python, style=monokai)
+def recursive_update(d1, d2):
+    """ Little helper function that does what d1.update(d2) does,
+    but works nice and recursively with dicts of dicts of dicts.
+
+    It's not necessarily very efficient.
+    """
+
+    for k in d1.keys():
+        if k not in d2:
+            continue
+
+        if isinstance(d1[k], dict) and isinstance(d2[k], dict):
+            d1[k] = recursive_update(d1[k], d2[k])
+        else:
+            d1[k] = d2[k]
+
+    for k in d2.keys():
+        if k not in d1:
+            d1[k] = d2[k]
+
+    return d1
+$$/code
+<p><strong>Add</strong> a new method to the <code>RootController</code> class
+that looks like the following.  This will do all of the heavy lifty ---
+producing the data for the jqplot.</p>
+
+$$code(lang=python, style=monokai)
+    def jqplot(self, days=1/(24.0)):
+        n_buckets = 15
+        now = datetime.datetime.now()
+        then = now - datetime.timedelta(days)
+        delta = datetime.timedelta(days) / n_buckets
+
+        entries = ServerHit.query.filter(ServerHit.timestamp>then).all()
+
+        t_bounds = [(then+delta*i, then+delta*(i+1)) for i in range(n_buckets)]
+
+        # Accumulate into buckets!  This is how I like to do it.
+        buckets = dict([(lower, 0) for lower, upper in t_bounds])
+        for entry in entries:
+            for lower, upper in t_bounds:
+                if entry.timestamp >= lower and entry.timestamp < upper:
+                    buckets[lower] += 1
+
+        # Only one series for now.. but you could do other stuff!
+        series = [buckets[lower] for lower, upper in t_bounds]
+        data = [
+            series,
+            # You could add another series here...
+        ]
+
+        options = { 'axes' : { 'xaxis': {
+            'ticks': [u.strftime("%I:%M:%S") for l, u in t_bounds],
+        }}}
+
+        return dict(data=data, options=options)
+$$/code
+
+<p><strong>Rewrite</strong> the <code>index(...)</code> method of your
+<code>RootController</code> to look like the following:</p>
+
+$$code(lang=python, style=monokai)
+    @expose('tw2facemelttg21.templates.index')
+    def index(self):
+        """Handle the front-page."""
+        jqplot_params = self.jqplot()
+        plotwidget = LogPlot(data=jqplot_params['data'])
+        plotwidget.options = recursive_update(
+            plotwidget.options, jqplot_params['options'])
+        return dict(page='index', gridwidget=LogGrid, plotwidget=plotwidget)
+$$/code
+
+<p>Now the jqplot widget should pull its data from the (perhaps poorly named)
+<code>jqplot</code> method of your <code>RootController</code> and should merge
+new <code>options</code> nicely with the predefined ones.  It should also be
+available in your <code>index</code> template under the name
+<code>plotwidget</code>.  Let's use it there!</p>
+
+<P><strong>Edit</strong> <code>tw2facemelttg21/templates/index.mak</code> and
+<strong>add</strong> the following line:</p>
+
+$$code(lang=html, style=monokai)
+<%inherit file="local:templates.master"/>
+${plotwidget.display() | n}
+${gridwidget.display() | n}
+$$/code
+<p>Revisit <a href="http://localhost:8080/"
+  target="_blank">http://localhost:8080/</a> and you should get something like
+this.</p>
+
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot3.png"><img alt="" class="size-medium wp-image-302" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot3.png?w=300" title="screenshot3" width="300" /></a>
+
+<h2>5.  Making the layout look like <a href="http://google.com/ig" target="_blank">http://google.com/ig</a> with <code>tw2.jqplugins.portlets</code></h2>
+
+<p><strong>Add</strong> the following import to the top of
+<code>tw2facemelttg21/controllers/root.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+import tw2.jqplugins.portlets as p
+$$/code
+
+<p><strong>Rewrite</strong> the <code>index(...)</code> method of your
+<code>RootController</code> to look like this:</p>
+
+$$code(lang=python, style=monokai)
+    @expose('tw2facemelttg21.templates.index')
+    def index(self):
+        """Handle the front-page."""
+        jqplot_params = self.jqplot()
+        plotwidget = LogPlot(data=jqplot_params['data'])
+        plotwidget.options = recursive_update(
+            plotwidget.options, jqplot_params['options'])
+
+        colwidth = '50%'
+        class LayoutWidget(p.ColumnLayout):
+            id = 'awesome-layout'
+            class col1(p.Column):
+                width = colwidth
+                class por1(p.Portlet):
+                    title = 'DB Entries of Server Hits'
+                    widget = LogGrid
+
+            class col2(p.Column):
+                width = colwidth
+                class por2(p.Portlet):
+                    title = 'Hits over the last hour'
+                    widget = plotwidget
+
+        return dict(page='index', layoutwidget=LayoutWidget)
+$$/code
+
+<p>Now that only the <code>layoutwidget</code> is available to your
+<code>index</code> template, you'll need to <strong>rewrite</strong> your
+<code>tw2facemelttg21/templates/index.mak</code>.</p>
+
+$$code(lang=html, style=monokai)
+<%inherit file="local:templates.master"/>
+${layoutwidget.display() | n}
+$$/code
+
+<p>To simplify all the styling, you'll also need to clear out all the clutter
+from the TG2.1 quickstart install.  <strong>Rewrite</strong> (for the first
+time) <code>tw2facemelttg21/templates/master.mak</code> to look like this:</p>
+
+
+$$code(lang=html, style=monokai)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head></head>
+<body>${self.body()}</body>
+</html>
+$$/code
+
+<p><strong>Rerun</strong> your paster server and you should see something like
+this.</p>
+
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot4.png"><img
+  alt="" class="size-medium wp-image-307" height="180"
+  src="http://threebean.files.wordpress.com/2011/04/screenshot4.png?w=300"
+  title="screenshot4" width="300" /></a>
+
+<p>The portlet windows are movable and collapsible and they <a
+  href="http://threebean.wordpress.com/2011/04/25/jquery-ui-portlets-with-saved-position-and-state-via-cookies/"
+  target="_blank">automatically retain their state</a> between page loads (with
+jquery.cookie.js).</p>
+
+---
+
+<p>I hope you enjoyed the tutorial.  Once again, you can get the entire source
+<a href="https://github.com/ralphbean/tw2-facemelt-tg2.1" target="_blank">here
+  on my github account</a>.  If you have any comments, feedback, or questions
+--- post 'em!</p>

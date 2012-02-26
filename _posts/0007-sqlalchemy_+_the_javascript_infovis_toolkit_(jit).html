@@ -1,0 +1,348 @@
+---
+categories: code, jit, python, turbogears
+date: 2011/03/06 05:27:24
+permalink: http://threebean.org/blog/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/
+tags: code, jit, python, turbogears
+title: sqlalchemy + the JavaScript InfoVis Toolkit (jit)
+---
+<p>I've been working on some new <a
+  href="http://toscawidgets.org/">ToscaWidgets2</a> widgetry.  Today's post is a
+tutorial on how to use <a
+  href="http://craftsman.rc.rit.edu/module?module=tw2.jit#SQLARadialGraph">tw2.jit.SQLARadialGraph</a>
+with the <a href="http://turbogears.org/2.1/docs/">Turbogears 2.1</a> framework.
+You can check out the entire source tree for this tutorial from <a
+  href="https://github.com/ralphbean/tw2.jit-tg2.1-demo/tree/master/tw2jittg21demo">my
+  github page</a>.</p>
+
+<p>I really like <a
+  href="http://craftsman.rc.rit.edu/module?module=tw2.jit#SQLARadialGraph">tw2.jit.SQLARadialGraph</a>
+and have been getting overly-excited about it:  foaming at the mouth,
+rambling...  I've tried to cut all that out of this post and just give you the
+details on how to get started using it and Turbogears 2.1.  In short,
+<code>SQLARadialGraph</code> itself is a python web component that produces an
+interactive graph of your database via javascript and asynchronous requests for
+JSON data.  Most all of its real rendering work is accomplished with the awesome
+<a href="http://thejit.org">JavaScript InfoVis Toolkit</a> by Nicolas Garcia
+Belmonte.</p>
+
+<p>For this post, first we'll configure Turbogears 2.1 to use Toscawidgets 2
+middleware.  Second we'll modify our new app's bootstrapping process to insert
+some random data into its development sqlite database.  Third, we'll configure
+and display an instance of <code>tw2.jit.SQLARadialGraph</code> to visualize the
+data we inserted.</p>
+
+<h1>1.  Setting up Turbogears </h1>
+<p>Start with a fresh TG 2.1 quickstarted app by running <code>$ paster
+  quickstart tw2.jit-tg2.1-demo</code>.  It will ask you some questions -- for
+this tutorial we are using <em>mako templates</em> and we <em>are</em> using
+authentication.</p>
+
+<h3> virtualenv </h3>
+<p>Jump into your newly quickstarted app's directory and run <code>$ virtualenv
+  --no-site-packages virtualenv</code> and <code>$ source
+  virtualenv/bin/activate</code> to cordon off your app's dependencies from your
+system-wide python site-packages directory.</p>
+
+<h3>Configure TG 2.1 for Toscawidgets 2</h3>
+<p><strong>Add</strong> the following three lines to the
+<code>install_requires</code> argument in your <code>setup.py</code> file.</p>
+
+$$code(lang=python, style=monokai)
+        "repoze.what-pylons",
+        "tg.devtools",
+        "tw2.jit",
+$$/code
+
+<p>A fresh Turbogears 2.1 quickstarted app depends on Toscawidgets 1 by default.
+We'll be using Toscawidgets 2 so we need to remove all the old references as
+well as tell TG2.1 to use the tw2 middleware instead of tw1.</p>
+
+<p><strong>Remove</strong> the following three lines from
+<code>tw2jittg21demo/controllers/root.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+from tgext.admin.tgadminconfig import TGAdminConfig
+from tgext.admin.controller import AdminController
+ ... < snip > ...
+    admin = AdminController(model, DBSession, config_type=TGAdminConfig)
+$$/code
+
+<p><strong>Remove</strong> the following one line from
+<code>tw2jittg21demo/lib/base.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+from tw.api import WidgetBunch
+$$/code
+
+<p><strong>Add</strong> the following two lines to the bottom of
+<code>tw2jittg21demo/config/app_cfg.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+base_config.use_toscawidgets = False
+base_config.use_toscawidgets2 = True
+$$/code
+
+<p>You will also need to enable the <em>query</em> property on all models.</p>
+
+<p><strong>Uncomment</strong> the following line in
+<code>tw2jittg21demo/model/__init__.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+DeclarativeBase.query = DBSession.query_property()
+$$/code
+
+<p><strong>Test</strong> it all with the following commands.</p>
+$$code(lang=text, style=monokai)
+$ python setup.py develop
+$ paster setup-app development.ini
+$ paster serve --reload development.ini
+$$/code
+
+<p>And point your browser at <a
+  href="http://localhost:8080">http://localhost:8080</a>.  If all has gone well,
+you should see the default index page for your newly quickstarted TG2.1
+web-app.</p>
+
+<h1>2.  Add some `interesting` data</h1>
+<p>We'll use the existing models defined in <code>tw2jittg21demo/model/</code>
+to make this tutorial shorter and smoother.</p>
+
+<p>Edit <code>tw2jittg21demo/websetup/bootstrap.py</code> (which is the code
+that gets run when you issue <code>$ paster setup-app development.ini</code>)
+and <strong>add</strong> the following two new function definitions just above
+the definition of the <code>bootstrap</code> function.</p>
+
+$$code(lang=python, style=monokai)
+
+from random import choice, randint
+
+def add_random_users():
+    """ Add 9 random users """
+    import string
+    chars = string.letters
+    for first in [u'Sally', u'John', u'Tim']:
+        for last in [u'Anderson', u'Flanderson', u'Block']:
+            user = model.User()
+            user.user_name = unicode((first[0] + last).lower())
+            user.display_name = u'%s %s' % (first, last)
+            user.email_address = u'%s@socialistworker.org' % user.user_name
+            user.password = u''.join([choice(chars) for i in range(12)])
+            model.DBSession.add(user)
+
+    model.DBSession.flush()
+
+def add_random_groups():
+    """ Generate a number of random groups and add users to them """
+    for name in ['developer', 'system admin', 'shmeveloper', 'crispin gladbin']:
+        group = model.Group()
+        group.group_name = name
+        group.display_name = (u"%ss group" % name).title()
+        model.DBSession.add(group)
+
+        all_users = model.User.query.all()
+        for i in range(randint(0, len(all_users)-2)):
+            user = choice(all_users)
+            while user in group.users:
+                user = choice(all_users)
+            
+            group.users.append(user)
+
+    model.DBSession.flush()
+$$/code
+
+<p>These new functions still need to be <em>called</em> during the boostrap
+process, so <strong>add</strong> two invocation lines just above the
+<code>transaction.commit()</code> line at the end of the <code>boostrap</code>
+function.</p>
+
+$$code(lang=python, style=monokai)
+        model.DBSession.add(u1)
+        model.DBSession.flush()
+
+        add_random_users()
+        add_random_groups()
+
+        transaction.commit()
+    except IntegrityError:
+        print 'Warning, there was a problem adding your auth data, it may have already been added:'
+$$/code
+
+<p><strong>Blow away and re-create</strong> your database with the following
+commands:</p>
+$$code(lang=text, style=monokai)
+$ rm devdata.db
+$ paster setup-app development.ini
+$$/code
+
+<p>Run <code>$ paster serve --reload development.ini</code> and point your
+browser at <a href="http://localhost:8080">http://localhost:8080</a> again to
+make sure nothing is broken.</p>
+
+<h1>3.  Visualize the database with <em>tw2.jit.SQLARadialGraph</em></h1>
+
+<h3>Make the widget available in your root controller</h3>
+
+<p><strong>Create</strong> a module <code>tw2jittg21demo/widgets.py</code> with
+the following content:</p>
+
+$$code(lang=python, style=monokai)
+from tw2jittg21demo import model
+from tw2.jit import SQLARadialGraph
+
+def makeUserGraph():
+    class UserGraph(SQLARadialGraph):
+        id = 'whatever'
+        base_url = '/jit_data'
+        entities = [model.User, model.Group, model.Permission]
+        excluded_columns = ['_password', 'password',
+                            'user_id', 'group_id', 'permission_id']
+        width = '920'
+        height = '525'
+        rootObject = model.User.query.first()
+    
+    return UserGraph
+$$/code
+
+<p>Modify your root controller in
+<code>tw2jittg21demo/controllers/root.py</code> to make use of the new
+widget.</p>
+
+<p><strong>Add</strong> the following import above the
+<code>RootController</code> definition:</p>
+
+$$code(lang=python, style=monokai)
+from tw2jittg21demo.widgets import makeUserGraph
+$$/code
+
+<p><strong>Modify</strong> the <code>index(self)</code> method so that the
+return statement looks like:</p>
+
+$$code(lang=python, style=monokai)
+        return dict(page='index', widget=makeUserGraph())
+$$/code
+
+<p>And <strong>add</strong> a new method to serve json data to the jit
+widget.</p>
+
+$$code(lang=python, style=monokai)
+    @expose('json')
+    def jit_data(self, *args, **kw):
+        """ Serve data from the tw2.jit built-in controller """
+        return makeUserGraph().request(request).body
+$$/code 
+
+<h3>Display the widget in your root template</h3>
+
+<p><strong>Replace</strong> <em>all</em> of the contents of
+<code>tw2jittg21demo/templates/index.mak</code> with the following two
+lines:</p>
+
+$$code(lang=html, style=monokai)
+<%inherit file="local:templates.master"/>
+${widget.display() | n }
+$$/code
+
+<h3>Give it a spin</h3>
+
+<p>Point your browser once again at <a
+  href="http://localhost:8080">http://localhost:8080</a> and you should be
+greeted by something like the following:</p>
+
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot1.png"><img alt="Screenshot of the tw2.jit.SQLARadialGraph in action" class="size-medium wp-image-112" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot1.png?w=300" title="screenshot1" width="300" /></a>
+
+<h3>Getting fancy</h3>
+
+<p><code>tw2.jit.SQLARadialGraph</code> can make use of various method defined
+on the sqlalchemy entities of which its been made aware.  One is the
+<code>__unicode__(self)</code> method which is already present on our models
+from the TG2.1 quickstart process.  Another is <code>__jit_data__(self)</code>
+which must return a json-ifiable python dict.</p>
+
+<p>In the future, we expect to support more attribute, but at the time of this
+writing the only attribute that is actually used on the client side is the value
+of an <code>hover_html</code> key if it is present at all.</p>
+
+<p><strong>Add</strong> the following two methods to your
+<code>tw2jittg21demo.model.User</code> class which is defined in
+<code>tw2jittg21demo/model/auth.py</code>:</p>
+
+$$code(lang=python, style=monokai)
+    @property
+    def gravatar_url(self):
+        """ Return a link to the gravatar image for this email addy """
+        import hashlib
+        hsh = hashlib.md5(self.email_address).hexdigest()
+        base = "http://www.gravatar.com/avatar/{hsh}?d=monsterid"
+        return base.format(hsh=hsh)
+
+    def __jit_data__(self):
+        """ 'hover_html' is the only supported key at present """
+        return {
+            'hover_html' : """
+            <h2>{display_name}</h2>
+            <img src="{gravatar_url}" />
+            <ul>
+                <li>{user_name}</li>
+                <li>{created}</li>
+            </ul>
+            """.format(gravatar_url=self.gravatar_url, **self.__dict__)
+        }
+$$/code
+
+<p><strong>Restart</strong> your webapp and <strong>re-visit</strong> <a
+  href="http://localhost:8080">http://localhost:8080</a>.  You should see fancy
+pop-ups now when you mouseover any entity for which a <code>__jit_data__</code>
+method returns a dict containing a <em>hover_html</em> key.</p>
+
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot2.png"><img alt="sqlalchemy entities can provide tw2.jit.SQLARadialGraph with content to be displayed on mouseover" class="size-medium wp-image-114" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot2.png?w=300" title="screenshot2" width="300" /></a>
+
+<h3>Style</h3>
+
+<p>Lastly, you may want to re-style the jit graph to fit your page.
+<strong>Modify</strong> <code>tw2jittg21demo/widgets.py</code> by adding the
+following import statement at the top:</p>
+
+$$code(lang=python, style=monokai)
+from tw2.core import JSSymbol
+$$/code
+
+<p>and by <strong>adding</strong> the following extra specifications to the
+<code>UserGraph</code> class:</p>
+
+$$code(lang=python, style=monokai)
+        # Try to match colors to the TG banner
+        backgroundcolor = '#FFFFFF'
+        background = { 'CanvasStyles': { 'strokeStyle' : '#FFFFFF' } }
+        Node = { 'color' : '#ffcb2f' }
+        Edge = { 'color' : '#307e8a', 'lineWidth':1.5, }
+
+        # Override the label style
+        onPlaceLabel = JSSymbol(src="""
+            (function(domElement, node){
+                domElement.style.display = "none";
+                domElement.innerHTML = node.name;
+                domElement.style.display = "";
+                var left = parseInt(domElement.style.left);
+                domElement.style.width = '120px';
+                domElement.style.height = '';
+                var w = domElement.offsetWidth;
+                domElement.style.left = (left - w /2) + 'px';
+
+                domElement.style.cursor = 'pointer';
+                if ( node._depth <= 1 )
+                    domElement.style.color = 'black';
+                else
+                    domElement.style.color = 'grey';
+            })""")
+$$/code
+
+<p>Once again <strong>restart</strong> your webapp and <strong>reload</strong>
+the page to get the following:</p>
+
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot3.png"><img alt="tw2.jit.SQLARadialGraph styled to fit more nicely with the TG2.1 default appearance" class="size-medium wp-image-115" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot3.png?w=300" title="screenshot3" width="300" /></a>
+
+<h1>Outties</h1>
+
+<p>I hope this post was helpful and got you interested enough to check out the
+code and improve on it.  Comments, questions, and patches are all
+appreciated.</p>

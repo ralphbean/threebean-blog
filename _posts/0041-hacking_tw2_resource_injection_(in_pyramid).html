@@ -1,0 +1,75 @@
+---
+categories: code, pyramid, python
+date: 2012/02/11 14:58:10
+permalink: http://threebean.org/blog/2012/02/11/hacking-tw2-resource-injection-in-pyramid/
+tags: code, pyramid, python
+title: Hacking tw2 resource injection (in pyramid)
+---
+<p>In <code>#toscawidgets</code> this morning, <a
+  href="https://twitter.com/#!/ekarlso">zykes-</a> was asking about how to do <a
+  href="http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/">the
+  jquery removal hack</a> I wrote about a month back but in Pyramid instead of
+TurboGears2.  First I'll summarize the problem, then show you our solution.</p>
+
+<p>toscawidgets2 <code>tw2.*</code> provides lots of handy web ui widgets
+including a wrapper around jquery-ui, jqgrid, and lots of fancy data widgets.
+One of the problems it solves for you is de-duplicating resources.  Say you're
+including two fancy jquery-related widgets.  Both of them require that
+<code>jquery.js</code> be included on the page.  <code>tw2</code> includes a
+piece of middleware that tracks all the resources required by the widgets being
+rendered on a given request, reduces that list to a set with no duplicates,
+orders it by dependency, and injects it into the <code><head></code>
+tag.</p>
+
+<p>Usually this is fine, but in some cases you want an exception to the rule.
+Say, like in my previous post, you want to include jquery.js yourself manually
+and you'd rather not have <code>tw2</code> stomping all over your javascript
+namespace.  You could disable <code>tw2</code> injection of <em>all</em>
+resources, but you want all the others included -- just not jquery.</p>
+
+<p>There is no automatic detection and filtration flag implemented in
+<code>tw2</code> and it would be tough to do in the general case.
+<code>tw2</code> can't guarantee that it's own jquery.js and your jquery.js are
+the same, or different, or included, or not included, or anything -- it doesn't
+even try.</p>
+
+<p>To get <code>tw2</code> to not do what you don't want, you need to
+<em>un-register</em> <code>tw2</code>'s jquery resource from the middleware
+yourself (on each request).  Previously we came up with a <a
+  href="http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/">working
+  hack</a> that does this in the context of a TurboGears2 app.  Here's the same
+concept applied to a Pyramid app using a Pyramid "tween".</p>
+
+$$code(lang=python, style=monokai)
+import tw2.core.core
+import tw2.jquery
+
+def remove_jq_factory(handler, registry):
+    """ Remove tw2 jquery_js from tw2's middleware registry.
+
+    In order to use this, you need to add the following to your
+    myapp/__init__.py file:
+
+        config.add_tween('myapp.tween.remove_jq_factory')
+
+    """
+
+    def remove_jq_tween(request):
+        # Send the request on through to other tweens and to our app
+        response = handler(request)
+
+        # Before the response is modified by the tw2 middleware, let's remove
+        # jquery_js from its registry.
+        offending_links = [r.req().link for r in [
+            tw2.jquery.jquery_js,
+        ]]
+        local = tw2.core.core.request_local()
+        local['resources'] = [
+            r for r in local.get('resources', list())
+            if r.link not in offending_links
+        ]
+
+        return response
+
+    return remove_jq_tween
+$$/code

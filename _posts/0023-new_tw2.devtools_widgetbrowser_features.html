@@ -1,0 +1,68 @@
+---
+categories: code, pypi, python
+date: 2011/05/02 23:04:39
+permalink: http://threebean.org/blog/2011/05/02/new-tw2-devtools-widgetbrowser-features/
+tags: code, pypi, python
+title: New tw2.devtools WidgetBrowser features
+---
+<p>I pumped out two new tw2.devtools WidgetBrowser features this afternoon --
+you can see them live at <a href="http://tw2-demos.threebean.org"
+  target="_blank">http://tw2-demos.threebean.org</a>.</p>
+
+<ul>
+<li>A <strong>view source</strong> link that pops open a jquery-ui dialog with the nicely formatted sourcecode of the demo widget rendered by the widget browser (<a href="https://bitbucket.org/ralphbean/tw2.devtools/changeset/495fb5124bdb" target="_blank">hg commit</a>).</li>
+<li>Metadata pulled from pypi including the latest release available and the <em>total number of downloads across all releases</em> (<a href="https://bitbucket.org/ralphbean/tw2.devtools/changeset/a5341157f399" target="_blank">hg commit</a>).</li>
+</ul>
+
+---
+
+<p>The 'view source' link stuff is pretty cool.  I got the idea and the details
+both from the <a href="moksha.csh.rit.edu">moksha demo dashboard</a> using
+<code>inspect</code> and <code>pygments</code>.  Here's the relevant piece of
+code:</p>
+
+$$code(lang=python, style=monokai)
+import warnings
+import inspect
+import pygments
+import pygments.lexers
+import pygments.formatters
+
+def prepare_source(s):
+    try:
+        source = inspect.getsource(s)
+    except IOError as e:
+        warnings.warn(repr(s) + " : " + str(e))
+        return ""
+
+    html_args = {'full': False}
+    code = pygments.highlight(
+        source,
+        pygments.lexers.PythonLexer(),
+        pygments.formatters.HtmlFormatter(**html_args)
+    )
+
+    return code
+$$/code
+
+---
+
+<p>The metadata part was trickier but to get the same information yourself,
+run:</p>
+
+$$code(lang=python, style=monokai)
+import xmlrpclib
+
+module = 'tw2.core'
+
+pypi = xmlrpclib.ServerProxy('http://pypi.python.org/pypi')
+
+total = sum([
+    sum([
+        d['downloads'] for d in pypi.release_urls(module, version)
+    ])
+    for version in pypi.package_releases(module, True)
+])
+
+print module, total
+$$/code

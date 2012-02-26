@@ -1,0 +1,62 @@
+---
+categories: code, python
+date: 2011/06/06 04:35:05
+permalink: http://threebean.org/blog/2011/06/06/context-manager-for-python-shelve-module/
+tags: code, python
+title: Context manager for python shelve module
+---
+<p>Getting in the flow of using context managers is great.</p>
+$$code(lang=python, style=monokai)
+# This feels really old.
+f = open('foo.txt')
+handle_file(f)
+f.close()
+
+# This feels really great.
+with open('foo.txt') as f:
+    handle_file(f)
+$$/code
+
+<p>Python's <code>shelve</code> module doesn't seem to be up to date; I get so
+frustrated whenever I try to use it inside <code>with</code> syntax and am
+refused.</p>
+
+<p>I fixed the problem!</p>
+
+$$code(lang=python, style=monokai)
+import shelve
+
+class cmshelve(object):
+    """ Context manager for shelve """
+
+    def __init__(self, filename):
+        self.filename = filename
+
+    def __enter__(self):
+        self.obj = shelve.open(self.filename)
+        return self.obj
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.obj.close()
+$$/code
+
+<p>You can use it a little something like this</p>
+
+
+$$code(lang=python, style=monokai)
+>>> with cmshelve('foo.db') as d:
+...     d['foo'] = "bar"
+...     print d
+{'foo': 'bar'}
+
+>>> # This proves that the shelve was actually closed
+>>> print d
+Traceback (most recent call last):
+File "<stdin>", line 1, in ?
+ValueError: invalid operation on closed shelf
+
+>>> # And as you'd expect, you can go back and re-open it just fine
+>>> with cmshelve('foo.db') as d:
+...     print d
+{'foo': 'bar'}
+$$/code

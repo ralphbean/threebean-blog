@@ -1,0 +1,35 @@
+---
+categories: code, pyramid, python
+date: 2011/03/06 21:01:29
+permalink: http://threebean.org/blog/2011/03/06/quickstarting-a-pyramid-app/
+tags: code, pyramid, python
+title: '`Quickstarting` a Pyramid app'
+---
+<p>Quickstart!  From scratch, we'll <a
+  href="http://docs.pylonsproject.org/projects/pyramid/dev/narr/project.html#paster-templates-included-with-pyramid">create
+  a new Pyramid app</a> from one of the included paster templates.  We'll use
+the one that provides a sqlalchemy model.  As we always should, we'll also lock
+everything down inside a <code>virtualenv</code>.</p>
+
+<p>(<strong>Edit:</strong> This was revised to use the awesome <a
+  href="http://www.doughellmann.com/projects/virtualenvwrapper/">virtualenvwrapper</a>.
+You can and must use <em>virtualenvwrapper</em>.)</p>
+
+$$code(lang=text, style=monokai)
+rjbpop@grossman ~/devel ()
+ % mkvirtualenv --no-site-packages my-pyramid-project
+(my-pyramid-project)rjbpop@grossman ~/devel ()
+ % pip install --use-mirrors pyramid
+(my-pyramid-project)rjbpop@grossman ~/devel ()
+ % paster create -t pyramid_alchemy project-name
+(my-pyramid-project)rjbpop@grossman ~/devel ()
+ % cd project-name
+(my-pyramid-project)rjbpop@grossman ~/devel/project-name ()
+ % python setup.py develop
+(my-pyramid-project)rjbpop@grossman ~/devel/project-name ()
+% paster serve development.ini
+$$/code
+
+<p>Point your browser at <a
+  href="http://localhost:6543">http://localhost:6543</a> to see if the setup
+process completed okay.</p>

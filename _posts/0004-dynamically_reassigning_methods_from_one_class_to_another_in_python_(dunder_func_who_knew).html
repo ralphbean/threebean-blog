@@ -1,0 +1,31 @@
+---
+categories: code, python
+date: 2011/01/27 04:03:54
+permalink: http://threebean.org/blog/2011/01/27/dynamically-reassigning-methods-from-one-class-to-another-in-python-dunder-func-who-knew/
+tags: code, python
+title: dynamically reassigning methods from one class to another in python (dunder
+  func, who knew?)
+---
+<p>I don't know if you've ever wanted to take a method from one class and attach
+it to another.  I never knew I'd wanted to, but it turns out I did.</p>
+
+$$code(lang=python, style=monokai)
+#!/usr/bin/python
+
+class Foo(object):
+    def __init__(self, id):
+        self.id = id
+    
+    def bar(self):
+        print self.id
+
+class Oof(object):
+    def __init__(self, id):
+        self.id = id
+
+# Wow
+Oof.bar = Foo.bar.__func__
+
+Foo(52).bar()      # prints 52
+Oof(10).bar()      # prints 10
+$$/code
