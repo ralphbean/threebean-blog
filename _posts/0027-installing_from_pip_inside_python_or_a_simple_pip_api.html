@@ -5,13 +5,22 @@ permalink: http://threebean.org/blog/2011/06/06/installing-from-pip-inside-pytho
 tags: code, pip, python
 title: Installing from pip inside python or, a simple pip API
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/'>http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/</a>.</p>So, it's a long story, but my bid to <a href="http://threebean.wordpress.com/2011/04/13/using-fabric-to-manage-moksha-development/">convert moksha's development tools to fabric</a> was a terrible idea:  mandatory <code>sshd</code> on dev boxes, passwords in the clear when chaining commands between systems, simple failure to work.  It was the wrong tool for the job.  Now I have my work cut out for me to replace it with something worthwhile.
+<p>So, it's a long story, but my bid to <a
+  href="http://threebean.org/blog/2011/04/13/using-fabric-to-manage-moksha-development/">convert
+  moksha's development tools to fabric</a> was a terrible idea:  mandatory
+<code>sshd</code> on dev boxes, passwords in the clear when chaining commands
+between systems, simple failure to work.  It was the wrong tool for the job.
+Now I have my work cut out for me to replace it with something worthwhile.</p>
 
-I have a need to invoke pip from inside python and to do it within the current virtualenv.  I googled and found <a href="http://groups.google.com/group/python-virtualenv/browse_thread/thread/fd598cf91d58f298">this somewhat old thread</a> on the virtualenv list which indicates that there's not much help out there.
+<p>I have a need to invoke pip from inside python and to do it within the
+current virtualenv.  I googled and found <a
+  href="http://groups.google.com/group/python-virtualenv/browse_thread/thread/fd598cf91d58f298">this
+  somewhat old thread</a> on the virtualenv list which indicates that there's
+not much help out there.</p>
 
-Here's my stab at it.
+<p>Here's my stab at it.</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import pip.commands.install
 
 def install_distributions(distributions):
@@ -21,11 +30,11 @@ def install_distributions(distributions):
     requirement_set = command.run(opts, distributions)
     requirement_set = command.run(opts, distributions)
     requirement_set.install(opts)
-[/sourcecode]
+$$/code
 
-And a test to see if it works.
+<p>And a test to see if it works.</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 #!/usr/bin/env python
 
 from blogmodule import install_distributions
@@ -49,6 +58,8 @@ def run_test():
 
 if __name__ == '__main__':
     run_test()
-[/sourcecode]
+$$/code
 
-Looking forward to doing something cool with this and python <a href="http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/">context managers</a> to manage <code>virtualenv</code>s.
+<p>Looking forward to doing something cool with this and python <a
+  href="http://threebean.org/blog/2011/06/06/context-manager-for-python-shelve-module/">context
+  managers</a> to manage <code>virtualenv</code>s.</p>

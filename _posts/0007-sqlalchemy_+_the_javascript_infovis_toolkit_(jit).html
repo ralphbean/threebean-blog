@@ -5,7 +5,6 @@ permalink: http://threebean.org/blog/2011/03/06/sqlalchemy-the-javascript-infovi
 tags: code, jit, python, turbogears
 title: sqlalchemy + the JavaScript InfoVis Toolkit (jit)
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/'>http://threebean.wordpress.com/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/</a>.</p>
 <p>I've been working on some new <a
   href="http://toscawidgets.org/">ToscaWidgets2</a> widgetry.  Today's post is a
 tutorial on how to use <a
@@ -48,11 +47,11 @@ system-wide python site-packages directory.</p>
 <p><strong>Add</strong> the following three lines to the
 <code>install_requires</code> argument in your <code>setup.py</code> file.</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
         "repoze.what-pylons",
         "tg.devtools",
         "tw2.jit",
-</blockquote>
+$$/code
 
 <p>A fresh Turbogears 2.1 quickstarted app depends on Toscawidgets 1 by default.
 We'll be using Toscawidgets 2 so we need to remove all the old references as
@@ -61,43 +60,43 @@ well as tell TG2.1 to use the tw2 middleware instead of tw1.</p>
 <p><strong>Remove</strong> the following three lines from
 <code>tw2jittg21demo/controllers/root.py</code>:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 from tgext.admin.tgadminconfig import TGAdminConfig
 from tgext.admin.controller import AdminController
  ... &lt; snip &gt; ...
     admin = AdminController(model, DBSession, config_type=TGAdminConfig)
-</blockquote>
+$$/code
 
 <p><strong>Remove</strong> the following one line from
 <code>tw2jittg21demo/lib/base.py</code>:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 from tw.api import WidgetBunch
-</blockquote>
+$$/code
 
 <p><strong>Add</strong> the following two lines to the bottom of
 <code>tw2jittg21demo/config/app_cfg.py</code>:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 base_config.use_toscawidgets = False
 base_config.use_toscawidgets2 = True
-</blockquote>
+$$/code
 
 <p>You will also need to enable the <em>query</em> property on all models.</p>
 
 <p><strong>Uncomment</strong> the following line in
 <code>tw2jittg21demo/model/__init__.py</code>:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 DeclarativeBase.query = DBSession.query_property()
-</blockquote>
+$$/code
 
 <p><strong>Test</strong> it all with the following commands.</p>
-<blockquote>
+$$code(lang=text, style=monokai)
 $ python setup.py develop
 $ paster setup-app development.ini
 $ paster serve --reload development.ini
-</blockquote>
+$$/code
 
 <p>And point your browser at <a
   href="http://localhost:8080">http://localhost:8080</a>.  If all has gone well,
@@ -170,10 +169,10 @@ $$/code
 
 <p><strong>Blow away and re-create</strong> your database with the following
 commands:</p>
-<blockquote>
+$$code(lang=text, style=monokai)
 $ rm devdata.db
 $ paster setup-app development.ini
-</blockquote>
+$$/code
 
 <p>Run <code>$ paster serve --reload development.ini</code> and point your
 browser at <a href="http://localhost:8080">http://localhost:8080</a> again to
@@ -211,16 +210,16 @@ widget.</p>
 <p><strong>Add</strong> the following import above the
 <code>RootController</code> definition:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 from tw2jittg21demo.widgets import makeUserGraph
-</blockquote>
+$$/code
 
 <p><strong>Modify</strong> the <code>index(self)</code> method so that the
 return statement looks like:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
         return dict(page='index', widget=makeUserGraph())
-</blockquote>
+$$/code
 
 <p>And <strong>add</strong> a new method to serve json data to the jit
 widget.</p>
@@ -238,10 +237,10 @@ $$/code
 <code>tw2jittg21demo/templates/index.mak</code> with the following two
 lines:</p>
 
-<blockquote>
+$$code(lang=html, style=monokai)
 &lt;%inherit file="local:templates.master"/&gt;
 ${widget.display() | n }
-</blockquote>
+$$/code
 
 <h3>Give it a spin</h3>
 
@@ -249,7 +248,7 @@ ${widget.display() | n }
   href="http://localhost:8080">http://localhost:8080</a> and you should be
 greeted by something like the following:</p>
 
-[caption id="attachment_112" align="aligncenter" width="300" caption="Screenshot of the tw2.jit.SQLARadialGraph in action."]<a href="http://threebean.files.wordpress.com/2011/03/screenshot1.png"><img alt="Screenshot of the tw2.jit.SQLARadialGraph in action" class="size-medium wp-image-112" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot1.png?w=300" title="screenshot1" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot1.png"><img alt="Screenshot of the tw2.jit.SQLARadialGraph in action" class="size-medium wp-image-112" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot1.png?w=300" title="screenshot1" width="300" /></a>
 
 <h3>Getting fancy</h3>
 
@@ -295,7 +294,7 @@ $$/code
 pop-ups now when you mouseover any entity for which a <code>__jit_data__</code>
 method returns a dict containing a <em>hover_html</em> key.</p>
 
-[caption id="attachment_114" align="aligncenter" width="300" caption="sqlalchemy entities can provide tw2.jit.SQLARadialGraph with content to be displayed on mouseover"]<a href="http://threebean.files.wordpress.com/2011/03/screenshot2.png"><img alt="sqlalchemy entities can provide tw2.jit.SQLARadialGraph with content to be displayed on mouseover" class="size-medium wp-image-114" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot2.png?w=300" title="screenshot2" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot2.png"><img alt="sqlalchemy entities can provide tw2.jit.SQLARadialGraph with content to be displayed on mouseover" class="size-medium wp-image-114" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot2.png?w=300" title="screenshot2" width="300" /></a>
 
 <h3>Style</h3>
 
@@ -303,9 +302,9 @@ method returns a dict containing a <em>hover_html</em> key.</p>
 <strong>Modify</strong> <code>tw2jittg21demo/widgets.py</code> by adding the
 following import statement at the top:</p>
 
-<blockquote>
+$$code(lang=python, style=monokai)
 from tw2.core import JSSymbol
-</blockquote>
+$$/code
 
 <p>and by <strong>adding</strong> the following extra specifications to the
 <code>UserGraph</code> class:</p>
@@ -340,7 +339,7 @@ $$/code
 <p>Once again <strong>restart</strong> your webapp and <strong>reload</strong>
 the page to get the following:</p>
 
-[caption id="attachment_115" align="aligncenter" width="300" caption="tw2.jit.SQLARadialGraph styled to fit more nicely with the TG2.1 default appearance"]<a href="http://threebean.files.wordpress.com/2011/03/screenshot3.png"><img alt="tw2.jit.SQLARadialGraph styled to fit more nicely with the TG2.1 default appearance" class="size-medium wp-image-115" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot3.png?w=300" title="screenshot3" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot3.png"><img alt="tw2.jit.SQLARadialGraph styled to fit more nicely with the TG2.1 default appearance" class="size-medium wp-image-115" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot3.png?w=300" title="screenshot3" width="300" /></a>
 
 <h1>Outties</h1>
 

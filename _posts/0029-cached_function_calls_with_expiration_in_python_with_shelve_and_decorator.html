@@ -5,9 +5,10 @@ permalink: http://threebean.org/blog/2011/06/08/cached-function-calls-with-expir
 tags: code, python
 title: Cached function calls with expiration in python with shelve and decorator
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/06/08/cached-function-calls-with-expiration-in-python-with-shelve-and-decorator/'>http://threebean.wordpress.com/2011/06/08/cached-function-calls-with-expiration-in-python-with-shelve-and-decorator/</a>.</p>Cacheing with decorators is nice.  Sometimes you don't want to use something super heavyweight, but just a little something you rolled on your own.
+<p>Cacheing with decorators is nice.  Sometimes you don't want to use something
+super heavyweight, but just a little something you rolled on your own.</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import time
 import random
 
@@ -32,11 +33,11 @@ if __name__ == '__main__':
 
     print f1('hai') # slow again
     print f1('hai') # fast again
-[/sourcecode]
+$$/code
 
-Here's the code that provides the @scached decorator.
+<p>Here's the code that provides the @scached decorator.</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import datetime
 import decorator
 import shelve
@@ -70,6 +71,8 @@ def scached(cache_file, expiry):
         return result
 
     return decorator.decorator(scached_closure)
-[/sourcecode]
+$$/code
 
-For extra cool points, combine the above with my post on <a href="http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/">shelve and context managers</a>.
+<p>For extra cool points, combine the above with my post on <a
+  href="http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/">shelve
+  and context managers</a>.</p>

@@ -5,11 +5,21 @@ permalink: http://threebean.org/blog/2011/11/21/skipping-words-in-zsh/
 tags: uncategorized
 title: skipping words in zsh
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/11/21/skipping-words-in-zsh/'>http://threebean.wordpress.com/2011/11/21/skipping-words-in-zsh/</a>.</p>About a half year ago I started using zsh after having been introduced to the <a href="http://grml.org/zsh/">GRML config</a>.  It boasts a ton of great features including remote tab-completion over ssh under the hood (when trying to remember a path for <i>scp</i> for instance).  It's been great, but the one thing I've been missing is that old word-skipping feature from bash; pressing <code>ctrl-left</code> and <code>ctrl-right</code> is really nice.
+<p>About a half year ago I started using zsh after having been introduced to the
+<a href="http://grml.org/zsh/">GRML config</a>.  It boasts a ton of great
+features including remote tab-completion over ssh under the hood (when trying to
+remember a path for <i>scp</i> for instance).  It's been great, but the one
+thing I've been missing is that old word-skipping feature from bash; pressing
+<code>ctrl-left</code> and <code>ctrl-right</code> is really nice.</p>
 
-After finding (in multiple places) <a href="http://blog.langly.org/2009/10/22/zsh-skipping-words/">cake that was really a lie</a>, I finally found it <a href="http://dotfiles.org/~frogb/.zshrc">commented out at the bottom of a random .zshrc</a>.  I added it to my <code>~/.zshrc.local</code> and am finally in business.
+<p>After finding (in multiple places) <a
+  href="http://blog.langly.org/2009/10/22/zsh-skipping-words/">cake that was
+  really a lie</a>, I finally found it <a
+  href="http://dotfiles.org/~frogb/.zshrc">commented out at the bottom of a
+  random .zshrc</a>.  I added it to my <code>~/.zshrc.local</code> and am
+finally in business.</p>
 
-[sourcecode language="text"]
+$$code(lang=text, style=monokai)
 bindkey '^[[1;5D' emacs-backward-word
 bindkey '^[[1;5C' emacs-forward-word
-[/sourcecode]
+$$/code

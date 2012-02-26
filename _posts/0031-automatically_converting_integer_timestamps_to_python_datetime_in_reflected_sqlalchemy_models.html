@@ -6,13 +6,19 @@ tags: code, python, slurm, sqlalchemy
 title: Automatically converting integer timestamps to python datetime in reflected
   SQLAlchemy models
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/09/01/automatically-converting-integer-timestamps-to-python-datetime-in-reflected-sqlalchemy-models/'>http://threebean.wordpress.com/2011/09/01/automatically-converting-integer-timestamps-to-python-datetime-in-reflected-sqlalchemy-models/</a>.</p>What a title...
+<p>What a title...</p>
 
-I'm working on <a href="http://pypi.python.org/pypi/slurchemy" target="_blank">slurchemy</a> and I have a legacy database with tons of tables (many are dynamically created by another app).  Each table has a few '*_time' fields that are stored as Integers.  A quick google showed me how to reflect SQLAlchemy models from the prexisting database, but getting the '*_time' columns to play out in python as datetime objects (and not as `long`s) was a real nuisance.
+<p>I'm working on <a href="http://pypi.python.org/pypi/slurchemy"
+  target="_blank">slurchemy</a> and I have a legacy database with tons of tables
+(many are dynamically created by another app).  Each table has a few '*_time'
+fields that are stored as Integers.  A quick google showed me how to reflect
+SQLAlchemy models from the prexisting database, but getting the '*_time' columns
+to play out in python as datetime objects (and not as `long`s) was a real
+nuisance.</p>
 
-I first tried to use the event framework like so:
+<p>I first tried to use the event framework like so:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 from sqlalchemy import types
 from sqlalchemy import event
 
@@ -21,13 +27,17 @@ def listen_for_reflect(table, column_info):
         column_info['type'] = types.DateTime()
 
 event.listen(Table, 'column_reflect', listen_for_reflect)
-[/sourcecode]
+$$/code
 
-This worked insofar as the Table's column type was really changed to a <code>sqlalchemy.types.DateTime</code> object in every case I wanted it to.  But once a <code>sqlalchemy.orm.mapper</code> was applied, my changes weren't <i>reflected</i>, so to speak.
+<p>This worked insofar as the Table's column type was really changed to a
+<code>sqlalchemy.types.DateTime</code> object in every case I wanted it to.  But
+once a <code>sqlalchemy.orm.mapper</code> was applied, my changes weren't
+<i>reflected</i>, so to speak.</p>
 
-I banged my head against the sqlalchemy codebase and couldn't make anything really elegant happen.  Here's what I settled with:
+<p>I banged my head against the sqlalchemy codebase and couldn't make anything
+really elegant happen.  Here's what I settled with:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import datetime
 import time
 
@@ -76,6 +86,6 @@ def add_datetime_properties(cls):
         datetime_key = key.replace('_time', '_datetime')
 
         setattr(cls, datetime_key, property(getx, setx))
-[/sourcecode]
+$$/code
 
-And it worked!
+<p>And it worked!</p>

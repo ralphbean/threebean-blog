@@ -5,21 +5,32 @@ permalink: http://threebean.org/blog/2011/10/28/python-ansi2html-makes-taskwarri
 tags: code, python
 title: python ansi2html makes taskwarrior fantas(k)tic
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/10/28/python-ansi2html-makes-taskwarrior-fantasktic/'>http://threebean.wordpress.com/2011/10/28/python-ansi2html-makes-taskwarrior-fantasktic/</a>.</p>Over a year ago, I wrote a python module called <a href="http://pypi.python.org/pypi/ansi2html">ansi2html</a> that takes colored ansi as input and produces colored, formatted html.
+<p>Over a year ago, I wrote a python module called <a
+  href="http://pypi.python.org/pypi/ansi2html">ansi2html</a> that takes colored
+ansi as input and produces colored, formatted html.</p>
 
-With it you can do something like the following:
-[sourcecode language="text"]
+<p>With it you can do something like the following:</p>
+$$code(lang=text, style=monokai)
 $ ls --color=always | ansi2html &gt; directory.html
 $ sudo tail /var/log/messages | ccze -A | ansi2html &gt; logs.html
-[/sourcecode]
+$$/code
 
-Much more recently I discovered <a href="http://taskwarrior.org/projects/show/taskwarrior">taskwarrior</a>, a command line todo list manager that rocks.  It features the ability to produce <a href="http://en.wikipedia.org/wiki/Burn_down_chart">burndown charts</a> of your todos over time.
+<p>Much more recently I discovered <a
+  href="http://taskwarrior.org/projects/show/taskwarrior">taskwarrior</a>, a
+command line todo list manager that rocks.  It features the ability to produce
+<a href="http://en.wikipedia.org/wiki/Burn_down_chart">burndown charts</a> of
+your todos over time.</p>
 
-I use the following in a cronjob to produce an online version of my burndown chart.
-[sourcecode language="text"]
+<p>I use the following in a cronjob to produce an online version of my burndown
+chart.</p>
+
+$$code(lang=text, style=monokai)
 $ task burndown | ansi2html | ssh me@web "cat &gt; ~/static/burndown.html"
-[/sourcecode]
+$$/code
 
-My regularly-updated chart is hosted on <a href="http://threebean.org/burndown.html">threebean.org</a>.
+<p>My regularly-updated chart is hosted on <a
+  href="http://threebean.org/burndown.html">threebean.org</a>.</p>
 
-If you come up with any neat uses for <a href="http://pypi.python.org/pypi/ansi2html">ansi2html</a>, please let me know.  I'd love to hear about them.
+<p>If you come up with any neat uses for <a
+  href="http://pypi.python.org/pypi/ansi2html">ansi2html</a>, please let me
+know.  I'd love to hear about them.</p>

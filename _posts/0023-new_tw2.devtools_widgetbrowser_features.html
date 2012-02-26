@@ -5,7 +5,9 @@ permalink: http://threebean.org/blog/2011/05/02/new-tw2-devtools-widgetbrowser-f
 tags: code, pypi, python
 title: New tw2.devtools WidgetBrowser features
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/05/02/new-tw2-devtools-widgetbrowser-features/'>http://threebean.wordpress.com/2011/05/02/new-tw2-devtools-widgetbrowser-features/</a>.</p>I pumped out two new tw2.devtools WidgetBrowser features this afternoon -- you can see them live at <a href="http://craftsman.rc.rit.edu" target="_blank">http://craftsman.rc.rit.edu</a>.
+<p>I pumped out two new tw2.devtools WidgetBrowser features this afternoon --
+you can see them live at <a href="http://tw2-demos.threebean.org"
+  target="_blank">http://tw2-demos.threebean.org</a>.</p>
 
 <ul>
 <li>A <strong>view source</strong> link that pops open a jquery-ui dialog with the nicely formatted sourcecode of the demo widget rendered by the widget browser (<a href="https://bitbucket.org/ralphbean/tw2.devtools/changeset/495fb5124bdb" target="_blank">hg commit</a>).</li>
@@ -14,9 +16,12 @@ title: New tw2.devtools WidgetBrowser features
 
 ---
 
-The 'view source' link stuff is pretty cool.  I got the idea and the details both from the <a href="moksha.csh.rit.edu">moksha demo dashboard</a> using <code>inspect</code> and <code>pygments</code>.  Here's the relevant piece of code:
+<p>The 'view source' link stuff is pretty cool.  I got the idea and the details
+both from the <a href="moksha.csh.rit.edu">moksha demo dashboard</a> using
+<code>inspect</code> and <code>pygments</code>.  Here's the relevant piece of
+code:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import warnings
 import inspect
 import pygments
@@ -38,13 +43,14 @@ def prepare_source(s):
     )
 
     return code
-[/sourcecode]
+$$/code
 
 ---
 
-The metadata part was trickier but to get the same information yourself, run:
+<p>The metadata part was trickier but to get the same information yourself,
+run:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import xmlrpclib
 
 module = 'tw2.core'
@@ -59,4 +65,4 @@ total = sum([
 ])
 
 print module, total
-[/sourcecode]
+$$/code

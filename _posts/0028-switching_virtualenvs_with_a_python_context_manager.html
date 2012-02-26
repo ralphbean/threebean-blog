@@ -5,13 +5,19 @@ permalink: http://threebean.org/blog/2011/06/06/364/
 tags: code, pip, pypi, python, virtualenv
 title: Switching virtualenvs with a python context manager
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/06/06/364/'>http://threebean.wordpress.com/2011/06/06/364/</a>.</p><strong>EDIT</strong>:  I released this.  You can <a href="http://pypi.python.org/pypi/virtualenvcontext">find it on pypi</a>.
+<p><strong>EDIT</strong>:  I released this.  You can <a
+  href="http://pypi.python.org/pypi/virtualenvcontext">find it on pypi</a>.</p>
 ---
-Got it!  Spent the last day working on a <a href="https://github.com/ralphbean/moksha/blob/mokshactl/moksha-ctl.py">control script</a> for moksha to replace my <a href="http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/">mistake of choosing fabric</a>.
+<p>Got it!  Spent the last day working on a <a
+  href="https://github.com/ralphbean/moksha/blob/mokshactl/moksha-ctl.py">control
+  script</a> for moksha to replace my <a
+  href="http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/">mistake
+  of choosing fabric</a>.</p>
 
-With this little nugget, you can do cool <em>in-python</em> context switching of <code>virtualenv</code>s with <code>VirtualenvContext</code> like this:
+<p>With this little nugget, you can do cool <em>in-python</em> context switching
+of <code>virtualenv</code>s with <code>VirtualenvContext</code> like this:</p>
 
-[sourcecode language="python" light="True"]
+$$code(lang=python, style=monokai)
 #!/usr/bin/python
 
 from blogcopypaste import VirtualenvContext
@@ -30,15 +36,21 @@ try:
 except ImportError as e:
     print "But once I exit that block, I lose my powers again..."
 
-[/sourcecode]
+$$/code
 
-<code>kitchen</code> could be any non-standard-library python package you choose.  (Although <code>kitchen</code> itself is <a href="http://pypi.python.org/pypi/kitchen">pretty cool</a>).
+<p><code>kitchen</code> could be any non-standard-library python package you
+choose.  (Although <code>kitchen</code> itself is <a
+  href="http://pypi.python.org/pypi/kitchen">pretty cool</a>).</p>
 
-I learned a ton about <code>ihooks</code> and the python <code>__import__</code> built-in... <a href="http://www.python.org/dev/peps/pep-0302/">PEP 302</a> was an eye-opener.
+<p>I learned a ton about <code>ihooks</code> and the python
+<code>__import__</code> built-in... <a
+  href="http://www.python.org/dev/peps/pep-0302/">PEP 302</a> was an
+eye-opener.</p>
 
-Here's the code that makes that fancy <code>VirtualenvContext</code> happen:
+<p>Here's the code that makes that fancy <code>VirtualenvContext</code>
+happen:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 """ Virtualenv context management! """
 
 import os
@@ -112,11 +124,13 @@ class VirtualenvContext(object):
             del sys.modules[name]
         self.importer.loader.remembered = []
         sys.path_importer_cache.clear()
-[/sourcecode]
+$$/code
 
-<strong>Fun fact</strong>:  you can combine this with the <a href="http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/">install_distributions function in my previous post</a> to do:
+<p><strong>Fun fact</strong>:  you can combine this with the <a
+  href="http://threebean.wordpress.com/2011/06/06/installing-from-pip-inside-python-or-a-simple-pip-api/">install_distributions
+  function in my previous post</a> to do:</p>
 
-[sourcecode language="python" light="True"]
+$$code(lang=python, style=monokai)
 with VirtualenvContext('some-environment'):
     install_distributions(['Markdown'])
-[/sourcecode]
+$$/code

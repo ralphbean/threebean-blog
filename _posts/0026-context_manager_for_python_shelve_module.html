@@ -5,8 +5,8 @@ permalink: http://threebean.org/blog/2011/06/06/context-manager-for-python-shelv
 tags: code, python
 title: Context manager for python shelve module
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/'>http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/</a>.</p>Getting in the flow of using context managers is great.
-[sourcecode language="python" light="True"]
+<p>Getting in the flow of using context managers is great.</p>
+$$code(lang=python, style=monokai)
 # This feels really old.
 f = open('foo.txt')
 handle_file(f)
@@ -15,13 +15,15 @@ f.close()
 # This feels really great.
 with open('foo.txt') as f:
     handle_file(f)
-[/sourcecode]
+$$/code
 
-Python's <code>shelve</code> module doesn't seem to be up to date; I get so frustrated whenever I try to use it inside <code>with</code> syntax and am refused.
+<p>Python's <code>shelve</code> module doesn't seem to be up to date; I get so
+frustrated whenever I try to use it inside <code>with</code> syntax and am
+refused.</p>
 
-I fixed the problem!
+<p>I fixed the problem!</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import shelve
 
 class cmshelve(object):
@@ -36,12 +38,12 @@ class cmshelve(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.obj.close()
-[/sourcecode]
+$$/code
 
-You can use it a little something like this
+<p>You can use it a little something like this</p>
 
 
-[sourcecode language="python" light="True"]
+$$code(lang=python, style=monokai)
 &gt;&gt;&gt; with cmshelve('foo.db') as d:
 ...     d['foo'] = "bar"
 ...     print d
@@ -57,4 +59,4 @@ ValueError: invalid operation on closed shelf
 &gt;&gt;&gt; with cmshelve('foo.db') as d:
 ...     print d
 {'foo': 'bar'}
-[/sourcecode]
+$$/code

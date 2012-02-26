@@ -5,10 +5,13 @@ permalink: http://threebean.org/blog/2011/07/19/using-repoze-who-plugins-ldap-in
 tags: code, ldap, python, turbogears
 title: Using repoze.who.plugins.ldap in a TurboGears 2.1 app
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/'>http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/</a>.</p>Often, you will need to authenticate against <code>ldap</code> in your webapp.  Here's how to make that happen in a freshly quickstarted TurboGears 2.1 app.
+
+<p>Often, you will need to authenticate against <code>ldap</code> in your
+webapp.  Here's how to make that happen in a freshly quickstarted TurboGears 2.1
+app.</p>
 
 <h2>Setting up your environment</h2>
-[sourcecode language="bash"]
+$$code(lang=bash, style=monokai)
 mkvirtualenv --no-site-packages repoze-ldap-app
 pip install tg.devtools
 paster quickstart   # call the app repoze-ldap-app, yes to mako and auth
@@ -17,31 +20,38 @@ python setup.py develop
 pip install genshi  # This is a workaround.
 paster setup-app development.ini
 paster serve development.ini  # To test if the basic app works.
-[/sourcecode]
+$$/code
 
-Point your browser at <a href="http://localhost:8080">http://localhost:8080</a> just to make sure everything is cool.
+<p>Point your browser at <a
+  href="http://localhost:8080">http://localhost:8080</a> just to make sure
+everything is cool.</p>
 
 <h2>Setting up <code>repoze.who.plugins.ldap</code></h2>
-<strong>Add</strong> the following line to the <code>install_requires</code> list in <code>setup.py</code>:
+<p><strong>Add</strong> the following line to the <code>install_requires</code>
+list in <code>setup.py</code>:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
     "repoze.who.plugins.ldap",
-[/sourcecode]
+$$/code
 
-Run <code>python setup.py develop</code> to install the newly listed repoze plugin.
+<p>Run <code>python setup.py develop</code> to install the newly listed repoze
+plugin.</p>
 
-<strong>Add</strong> the following four lines to <code>development.ini</code> which reference an as yet unwritten secondary configuration file.  Place them just above the <code>sqlalchemy.url=...</code> lines:
+<P><strong>Add</strong> the following four lines to <code>development.ini</code>
+which reference an as yet unwritten secondary configuration file.  Place them
+just above the <code>sqlalchemy.url=...</code> lines:</p>
 
-[sourcecode language="text"]
+$$code(lang=text, style=monokai)
 # Repoze.who stuff
 who.config_file = %(here)s/who.ini
 who.log_level = INFO
 who.log_stream = stdout
-[/sourcecode]
+$$/code
 
-<strong>Create</strong> a new file <code>who.ini</code> with the following contents:
+<p><strong>Create</strong> a new file <code>who.ini</code> with the following
+contents:</p>
 
-[sourcecode language="text"]
+$$code(lang=text, style=monokai)
 # This file is adapted from:
 # http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/
 # which has been adapted from:
@@ -100,12 +110,12 @@ plugins =
 [challengers]
 plugins =
     friendlyform;browser
-[/sourcecode]
+$$/code
 
+<p><strong>Create</strong> another new file
+<code>repozeldapapp/lib/auth.py</code> with the following contents:</p>
 
-<strong>Create</strong> another new file <code>repozeldapapp/lib/auth.py</code> with the following contents:
-
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 from repoze.who.plugins.ldap import (
     LDAPAttributesPlugin, LDAPAuthenticatorPlugin
 )
@@ -173,28 +183,33 @@ class ReconnectingAuthenticatorPlugin(LDAPAuthenticatorPlugin, URISaver):
             self.ldap_connection = ldap.initialize(self.uri)
 
         return res
-[/sourcecode]
+$$/code
 
-Finally, do two things to <code>repozeldapapp/config/middleware.py</code>.
+<p>Finally, do two things to
+<code>repozeldapapp/config/middleware.py</code>.</p>
 
-<strong>Edit</strong> it and at the top of the file add:
+<P><strong>Edit</strong> it and at the top of the file add:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 from repoze.who.config import make_middleware_with_config
-[/sourcecode]
+$$/code
 
-<strong>Add</strong> the following inside the <code>make_app(...)</code> function, just below the comment line about Wrap your base TurboGears 2..., like so:
+<p><strong>Add</strong> the following inside the <code>make_app(...)</code>
+function, just below the comment line about Wrap your base TurboGears 2..., like
+so:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
     # Wrap your base TurboGears 2 application with custom middleware here
     app = make_middleware_with_config(
         app, global_conf,
         app_conf['who.config_file'],
         app_conf['who.log_stream'],
         app_conf['who.log_level'])
-[/sourcecode]
+$$/code
 
 <h2>Give it a test</h2>
-Restart the <code>paster</code> server and reload <a href="http://localhost:8080">http://localhost:8080</a>.  Try logging in as a user in your ldap instance and you should be all gravy.
+<p>Restart the <code>paster</code> server and reload <a
+  href="http://localhost:8080">http://localhost:8080</a>.  Try logging in as a
+user in your ldap instance and you should be all gravy.</p>
 
-[caption id="" align="aligncenter"  width="256" caption="You should be all gravy."]<a href="http://www.flickr.com/photos/deathbeforedisco/3608101114"><img alt="You should be all gravy." height="192" src="http://farm4.static.flickr.com/3393/3608101114_22a355e9a5_b.jpg" title="You should be all gravy." width="256" /></a>[/caption]
+<a href="http://www.flickr.com/photos/deathbeforedisco/3608101114"><img alt="You should be all gravy." height="192" src="http://farm4.static.flickr.com/3393/3608101114_22a355e9a5_b.jpg" title="You should be all gravy." width="256" /></a>

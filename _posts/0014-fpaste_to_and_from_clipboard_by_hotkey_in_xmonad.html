@@ -5,7 +5,6 @@ permalink: http://threebean.org/blog/2011/04/07/fpaste-to-and-from-clipboard-by-
 tags: code
 title: fpaste to and from clipboard by hotkey in xmonad
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/04/07/fpaste-to-and-from-clipboard-by-hotkey-in-xmonad/'>http://threebean.wordpress.com/2011/04/07/fpaste-to-and-from-clipboard-by-hotkey-in-xmonad/</a>.</p>
 <p>I find that in irc, I'm often selecting some code from vim or some shell
 output with my mouse, jumping to a browser, loading <a
   href="http://fpaste.org">fpaste.org</a>, pasting the content, clicking submit,
@@ -21,11 +20,11 @@ and bind a handy keystroke right next to your <a
 binding in your <i>~/.xmonad/xmonad.hs</i> (or whatever window manager config of
 your choice).</p>
 
-<blockquote>
+$$code(lang=haskell, style=monokai)
     ,("C-b", spawn "/usr/bin/bitlyclip")
     ,("C-M-z", spawn "notify-send 'fpasteclip' $(fpaste -i -o)")
     ,("C-M-a", spawn "notify-send 'fpasteclip with python syntax highlighting' $(fpaste -l python -i -o)")
-</blockquote>
+$$/code
 
 <p>Now with <i>ctrl+alt+z</i>, whatever was in your clipboard has been dumped
 into fpaste and your clipboard now contains the needed link in one go!</p>

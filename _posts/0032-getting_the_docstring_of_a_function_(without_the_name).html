@@ -5,11 +5,15 @@ permalink: http://threebean.org/blog/2011/09/13/getting-the-docstring-of-a-funct
 tags: code, oops, python
 title: Getting the docstring of a function (without the name)
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/09/13/getting-the-docstring-of-a-function-without-the-name/'>http://threebean.wordpress.com/2011/09/13/getting-the-docstring-of-a-function-without-the-name/</a>.</p>I was using <code>argparse</code> and entry-points [console_scripts] in a project at work and I wanted each of the 12 console scripts to have a --help option that would display (among other things) the __doc__ of their main entry function.  This way I wouldn't have to rewrite those docs over and over when I added a new script.
+<p>I was using <code>argparse</code> and entry-points [console_scripts] in a
+project at work and I wanted each of the 12 console scripts to have a --help
+option that would display (among other things) the __doc__ of their main entry
+function.  This way I wouldn't have to rewrite those docs over and over when I
+added a new script.</p>
 
-I came up with this little guy:
+<p>I came up with this little guy:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 #!/usr/bin/env python
 """ The module level docstring """
 
@@ -34,11 +38,11 @@ def __my_doc__():
 if __name__ == '__main__':
     f()
     g()
-[/sourcecode]
+$$/code
 
-You could use it to, say, do:
+<p>You could use it to, say, do:</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import argparse
 
 def some_command():
@@ -46,15 +50,17 @@ def some_command():
     parser = argparse.ArgumentParser(description=__my_doc__())
     args = parser.parse_args()
     raise NotImplementedError("TODO -- gotta write this command still...")
-[/sourcecode]
+$$/code
 
-Relying on <code>globals()</code> really sucks.  If anyone can think of a better way to do it, let me know!
+<p>Relying on <code>globals()</code> really sucks.  If anyone can think of a
+better way to do it, let me know!</p>
 
 <strong>EDIT -- 09/15/2011</strong>
 
-Thanks to some inspiration from <a href="http://heewa.net/">@heewa</a>, I landed on this solution which is much more portable.
+<p>Thanks to some inspiration from <a href="http://heewa.net/">@heewa</a>, I
+landed on this solution which is much more portable.</p>
 
-[sourcecode language="python"]
+$$code(lang=python, style=monokai)
 import inspect
 
 def __my_doc__(n=1):
@@ -66,4 +72,4 @@ def __my_doc__(n=1):
 
     frame = inspect.stack()[n][0]
     return frame.f_globals[frame.f_code.co_name].__doc__
-[/sourcecode]
+$$/code

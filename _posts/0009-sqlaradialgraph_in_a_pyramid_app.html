@@ -5,7 +5,6 @@ permalink: http://threebean.org/blog/2011/03/07/sqlaradialgraph-in-a-pyramid-app
 tags: code, jit, pyramid, python
 title: SQLARadialGraph in a Pyramid app
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/03/07/sqlaradialgraph-in-a-pyramid-app/'>http://threebean.wordpress.com/2011/03/07/sqlaradialgraph-in-a-pyramid-app/</a>.</p>
 <p><code>tw2.jit.SQLARadialGraph</code> is a python class that encapsulates the
 awesome <code>RGraph</code> widget from the <a
   href="http://thejit.org/">Javascript InfoVis Toolkit</a> and automatically
@@ -65,15 +64,16 @@ $$/code
 
 <p>If you're using Chameleon templates
 (<code>&lt;project&gt;/templates/model.pt</code>) this looks like:</p>
-<blockquote>
+$$code(lang=html, style=monokai)
 &lt;div tal:content="structure jitwidget.display()"&gt;&lt;/div&gt;
-</blockquote>
+$$/code
 
 <p>If you're using Mako templates
 (<code>&lt;project&gt;/templates/model.mak</code>) this looks like:</p>
-<blockquote>
+
+$$code(lang=html, style=monokai)
 ${jitwidget.display() | n}
-</blockquote>
+$$/code
 
 <p><strong>8.  Open</strong> a route to the widget's own controller.</p>
 
@@ -90,7 +90,7 @@ $$/code
   href="http://localhost:6543/1">http://localhost:6543/1</a> and it
 <em>might</em> look something like this.</p>
 
-[caption id="attachment_142" align="aligncenter" width="300" caption="tw2.jit.SQLARadialGraph in the default pyramid_alchemy app"]<a href="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png"><img alt="tw2.jit.SQLARadialGraph in the default pyramid_alchemy app" class="size-medium wp-image-142" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png?w=300" title="screenshot-pyramid" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png"><img alt="tw2.jit.SQLARadialGraph in the default pyramid_alchemy app" class="size-medium wp-image-142" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png?w=300" title="screenshot-pyramid" width="300" /></a>
 
 <p>You can, of course, tweak all kinds of style and functional parameters on
 <code>SQLARadialGraph</code> like those outlined near the end of my post on

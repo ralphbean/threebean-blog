@@ -5,7 +5,6 @@ permalink: http://threebean.org/blog/2011/04/30/tutorial-melting-your-face-off-w
 tags: code, grid, jqplotwidget, jquery, python, turbogears
 title: Tutorial -- melting your face off with tw2 and TurboGears2.1
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/04/30/tutorial-melting-your-face-off-with-tw2-and-turbogears2-1/'>http://threebean.wordpress.com/2011/04/30/tutorial-melting-your-face-off-with-tw2-and-turbogears2-1/</a>.</p>
 <div class="wp-caption alignright" id="attachment_269" style="width: 310px;"><a
     href="http://threebean.files.wordpress.com/2011/04/crazyfort.jpg"><img
     alt="" class="size-medium wp-image-269" height="225"
@@ -115,7 +114,7 @@ purist.  After all, <a href="https://github.com/ralphbean/tw2-benchmark"
 <p>At this point you should be able to run your TG2.1 quickstarted app.
 <strong>Run</strong> the following:</p>
 
-$$code(lang=text)
+$$code(lang=text, style=monokai)
 % pip install --use-mirrors -e .
 % paster setup-app development.ini
 % paster serve development.ini
@@ -202,8 +201,7 @@ $$/code
 <p>Now <strong>blow away</strong> and <strong>recreate</strong> your old sqlite
 database by typing the following into your trusty terminal:</p>
 
-$$code(lang=text)
-[sourcecode light="True"]
+$$code(lang=text, style=monokai)
 % rm devdata.db
 % paster setup-app development.ini
 % paster serve development.ini
@@ -326,7 +324,7 @@ $$/code
 
 <p><strong>Install</strong> the newly listed dependencies by running:</p>
 
-$$code(lang=text)
+$$code(lang=text, style=monokai)
 % python setup.py develop
 % paster serve development.ini
 $$/code
@@ -336,7 +334,7 @@ $$/code
 
 <p>At this point, your app should look something like the following:</p>
 
-[caption id="attachment_292" align="aligncenter" width="300" caption="Your TurboGears2.1 app featuring the fabulous SQLAjqGridWidget."]<a href="http://threebean.files.wordpress.com/2011/04/screenshot1.png"><img alt="" class="size-medium wp-image-292" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot1.png?w=300" title="screenshot1" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot1.png"><img alt="" class="size-medium wp-image-292" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot1.png?w=300" title="screenshot1" width="300" /></a>
 
 <p>We should really (probably) do things as fancy as we can, and make use of
 jquery-ui's themes.</p>
@@ -380,7 +378,7 @@ see a list of all of them <a
   href="https://github.com/ralphbean/tw2.jqplugins.ui/blob/master/tw2/jqplugins/ui/base.py#L37"
   target="_blank">right here</a>.</p>
 
-[caption id="attachment_295" align="aligncenter" width="300" caption="set_ui_theme_name affects tw2.jqplugins.* widgets globally.  Nice!"]<a href="http://threebean.files.wordpress.com/2011/04/screenshot2.png"><img alt="" class="size-medium wp-image-295" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot2.png?w=300" title="screenshot2" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot2.png"><img alt="" class="size-medium wp-image-295" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot2.png?w=300" title="screenshot2" width="300" /></a>
 
 <h2>4.  Plotting server history with <code>tw2.jqplugins.jqplot:JQPlotWidget</code></h2>
 
@@ -531,7 +529,7 @@ $$/code
   target="_blank">http://localhost:8080/</a> and you should get something like
 this.</p>
 
-[caption id="attachment_302" align="aligncenter" width="300" caption="JQPlotWidget for the win!"]<a href="http://threebean.files.wordpress.com/2011/04/screenshot3.png"><img alt="" class="size-medium wp-image-302" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot3.png?w=300" title="screenshot3" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot3.png"><img alt="" class="size-medium wp-image-302" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot3.png?w=300" title="screenshot3" width="300" /></a>
 
 <h2>5.  Making the layout look like <a href="http://google.com/ig" target="_blank">http://google.com/ig</a> with <code>tw2.jqplugins.portlets</code></h2>
 
@@ -579,7 +577,6 @@ $$/code
 $$code(lang=html, style=monokai)
 &lt;%inherit file="local:templates.master"/&gt;
 ${layoutwidget.display() | n}
-[/sourcecode]
 $$/code
 
 <p>To simplify all the styling, you'll also need to clear out all the clutter
@@ -599,7 +596,10 @@ $$/code
 <p><strong>Rerun</strong> your paster server and you should see something like
 this.</p>
 
-[caption id="attachment_307" align="aligncenter" width="300" caption="Widgets inside portlets!"]<a href="http://threebean.files.wordpress.com/2011/04/screenshot4.png"><img alt="" class="size-medium wp-image-307" height="180" src="http://threebean.files.wordpress.com/2011/04/screenshot4.png?w=300" title="screenshot4" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2011/04/screenshot4.png"><img
+  alt="" class="size-medium wp-image-307" height="180"
+  src="http://threebean.files.wordpress.com/2011/04/screenshot4.png?w=300"
+  title="screenshot4" width="300" /></a>
 
 <p>The portlet windows are movable and collapsible and they <a
   href="http://threebean.wordpress.com/2011/04/25/jquery-ui-portlets-with-saved-position-and-state-via-cookies/"

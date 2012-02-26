@@ -5,7 +5,6 @@ permalink: http://threebean.org/blog/2011/02/04/namespace-refactor-for-tw2-jquer
 tags: code, oops, python
 title: Namespace refactor for tw2.jquery plugins
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2011/02/04/namespace-refactor-for-tw2-jquery-plugins/'>http://threebean.wordpress.com/2011/02/04/namespace-refactor-for-tw2-jquery-plugins/</a>.</p>
 <p>After consulting with <a href="https://bitbucket.org/josephtate">Joseph Tate</a>, we came to the decision to refactor the namespace for jquery plugins in ToscaWidgets2.  Everything previously known as <strong>tw2.jquery.plugins.*</strong> is now known as <strong>tw2.jqplugins.*</strong>.</p>
 
 <p>It all boils down to fighting with the <strong>tw2.jquery</strong> <em>non</em>-namespace.  A jquery plugin package would live in <em>..../site-packages/tw2/jquery/plugins/someplugin</em> and would have to ship its own file to  <em>..../site-packages/tw2/jquery/__init__.py</em>.  However, <strong>tw2.jquery</strong>'s <a href="https://bitbucket.org/toscawidgets/tw2jquery/src/cb565817af19/tw2/jquery/__init__.py">own __init__.py file</a> was <em>non-empty</em>.  In order to not break everything, jquery plugin packages would have to mirror <strong>tw2.jquery</strong>-proper's own content but in the end still break the rule suggested in the second-to-last paragraph of <a href="http://peak.telecommunity.com/DevCenter/setuptools#namespace-packages">this section of the setuptools documentation</a>.</p>

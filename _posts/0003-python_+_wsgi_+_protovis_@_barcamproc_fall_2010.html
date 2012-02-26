@@ -5,19 +5,36 @@ permalink: http://threebean.org/blog/2010/10/24/python-wsgi-protovis-barcamproc-
 tags: barcamp, code, protovis, python, turbogears
 title: Python + WSGI + protovis @ BarcampRoc Fall 2010
 ---
-<p>Originally posted at <a href='http://threebean.wordpress.com/2010/10/24/python-wsgi-protovis-barcamproc-fall-2010/'>http://threebean.wordpress.com/2010/10/24/python-wsgi-protovis-barcamproc-fall-2010/</a>.</p>I gave a <a href="http://github.com/ralphbean/barcamp.roc.fall.2010">presentation</a> at <a href="http://barcamproc.org/">BarcampRoc</a> yesterday on <a href="http://pypi.python.org/pypi/tw2.protovis.core">some</a> of the <a href="http://pypi.python.org/pypi/tw2.protovis.conventional">new</a> <a href="http://pypi.python.org/pypi/tw2.protovis.custom">widgets</a> I've been working on.  I started with a two-minute Powerpoint and then jumped right into a live hack session.  The audience helped chime in to tweak pieces of code, make the visualizations more interesting, and catch my clumsy syntax errors.  Few people in the room had python experience and none had experience with WSGI or protovis but it felt like everyone walked out with a good sense of how to carry out the same work again.
+<p>I gave a <a
+  href="http://github.com/ralphbean/barcamp.roc.fall.2010">presentation</a> at
+<a href="http://barcamproc.org/">BarcampRoc</a> yesterday on <a
+  href="http://pypi.python.org/pypi/tw2.protovis.core">some</a> of the <a
+  href="http://pypi.python.org/pypi/tw2.protovis.conventional">new</a> <a
+  href="http://pypi.python.org/pypi/tw2.protovis.custom">widgets</a> I've been
+working on.  I started with a two-minute Powerpoint and then jumped right into a
+live hack session.  The audience helped chime in to tweak pieces of code, make
+the visualizations more interesting, and catch my clumsy syntax errors.  Few
+people in the room had python experience and none had experience with WSGI or
+protovis but it felt like everyone walked out with a good sense of how to carry
+out the same work again.</p>
 
-Here's the rundown.
+<p>Here's the rundown.</p>
 
 <h1>Setting up Turbogears</h1>
-Before we do anything, you'll need Turbogears 2.1 and virtualenv setup on your system.  If you're running an rpm-based distro, the following should cut it:
+<p>Before we do anything, you'll need Turbogears 2.1 and virtualenv setup on
+your system.  If you're running an rpm-based distro, the following should cut
+it:</p>
 
-[sourcecode language="text" light="true"]
+$$code(lang=text, style=monokai)
 [rjbpop@grossman ~ []]# sudo yum install python-tg-devtools python-virtualenv
-[/sourcecode]
+$$/code
 
-Start with a fresh <a href="http://turbogears.org/">Turbogears 2.1</a> quickstarted app.  TG provides a wonderland of middleware to make writing robust web-apps easier and so will ask you some questions when quickstarting.  We won't need any repoze authentication stuff and we'll use genshi templates.
-[sourcecode language="text" light="true"]
+<p>Start with a fresh <a href="http://turbogears.org/">Turbogears 2.1</a>
+quickstarted app.  TG provides a wonderland of middleware to make writing robust
+web-apps easier and so will ask you some questions when quickstarting.  We won't
+need any repoze authentication stuff and we'll use genshi templates.</p>
+
+$$code(lang=text, style=monokai)
 [rjbpop@grossman ~ []]# mkdir devel
 
 [rjbpop@grossman ~ []]# cd devel
@@ -27,11 +44,11 @@ Enter project name: barcamp.roc.fall.2010
 Enter package name [barcamprocfall2010]: melissa_is_a_babe
 Would you prefer mako templates? (yes/[no]): no
 Do you need authentication and authorization in this project? ([yes]/no): no
-[/sourcecode]
+$$/code
 
 <p><code>paster</code> should barf some output while setting up the app.  We have some dependencies we need to install and since we don't want to risk messing up our system python environment, we'll use the handy <code>virtualenv</code> tool.</p>
 
-[sourcecode language="text" light="true"]
+$$code(lang=text, style=monokai)
 [rjbpop@grossman devel []]# cd barcamp.roc.fall.2010
 
 [rjbpop@grossman barcamp.roc.fall.2010 []]# virtualenv venv-test
@@ -47,20 +64,20 @@ Installing setuptools............done.
 ~/devel/barcamp.roc.fall.2010/venv-test/bin/pip
 
 (venv-test)[rjbpop@grossman barcamp.roc.fall.2010 []]# pip install --upgrade PasteScript tw2.protovis.custom
-[/sourcecode]
+$$/code
 
 <p><code>pip</code> should barf some output here too.  To verify that an instance of paster local to our virtual environment was installed, check:</p>
 
-[sourcecode language="text" light="true"]
+$$code(lang=text, style=monokai)
 (venv-test)[rjbpop@grossman barcamp.roc.fall.2010 []]# which paster
 ~/devel/barcamp.roc.fall.2010/venv-test/bin/paster
-[/sourcecode]
+$$/code
 
 <p>Good stuff.  Now, we're going to be using toscawidgets2 (package: tw2) not toscawidgets1 which turbogears2.1 has enabled by default.  Let's change that.</p>
 
 <p>Add the two highlighted lines to the bottom of <code>melissa_is_a_babe/config/app_cfg.py</code> so that it looks like:</p>
 
-[sourcecode language="python" light="true" highlight="6,7"]
+$$code(lang=python, style=monokai)
 #Configure the base SQLALchemy Setup
 base_config.use_sqlalchemy = True
 base_config.model = melissa_is_a_babe.model
@@ -68,11 +85,16 @@ base_config.DBSession = melissa_is_a_babe.model.DBSession
 
 base_config.use_toscawidgets = False
 base_config.use_toscawidgets2 = True
-[/sourcecode]
+$$/code
 
-The WSGI stack of our Turbogears2 app is now using the toscawidgets2 middleware layer.  Great!  There's one more thing to do before we can launch and check out our app:  Turbogears2.1 has a single spurious reference to toscawidgets1.  Let's remove it.  Edit <code>melissa_is_a_babe/lib/base.py</code> and remove the following highlighted line.
+<p>The WSGI stack of our Turbogears2 app is now using the toscawidgets2
+middleware layer.  Great!  There's one more thing to do before we can launch and
+check out our app:  Turbogears2.1 has a single spurious reference to
+toscawidgets1.  Let's remove it.  Edit
+<code>melissa_is_a_babe/lib/base.py</code> and remove the following highlighted
+line.</p>
 
-[sourcecode language="python" light="true" highlight="4"]
+$$code(lang=python, style=monokai)
 from tg import TGController, tmpl_context
 from tg.render import render
 from pylons.i18n import _, ungettext, N_
@@ -80,26 +102,29 @@ from tw.api import WidgetBunch
 import melissa_is_a_babe.model as model
 
 __all__ = ['BaseController']
-[/sourcecode]
+$$/code
 
-Word.  We should be set to spin up the jumpdrives.
+<p>Word.  We should be set to spin up the jumpdrives.</p>
 
-[sourcecode language="text" light="true"]
+$$code(lang=text, style=monokai)
 (venv-test)[rjbpop@grossman barcamp.roc.fall.2010 []]# paster serve --reload development.ini 
 Starting subprocess with file monitor
 Starting server in PID 2250.
 serving on http://127.0.0.1:8080
-[/sourcecode]
+$$/code
 
-God willing, if you point your browser at http://localhost:8080/ you should see the default quickstarted Turbogears index page.
+<p>God willing, if you point your browser at http://localhost:8080/ you should
+see the default quickstarted Turbogears index page.</p>
 
-[caption id="attachment_39" align="aligncenter" width="300" caption="The default quickstarted Turbogears2.1 index page"]<a href="http://threebean.files.wordpress.com/2010/10/sshot1.png"><img alt="Default quickstarted Turbogears2.1 index page" class="size-medium wp-image-39" height="176" src="http://threebean.files.wordpress.com/2010/10/sshot1.png?w=300" title="sshot1" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot1.png"><img alt="Default quickstarted Turbogears2.1 index page" class="size-medium wp-image-39" height="176" src="http://threebean.files.wordpress.com/2010/10/sshot1.png?w=300" title="sshot1" width="300" /></a>
 
 <h1>Fiddling with Turbogears</h1>
 
-Time to shave away stuff we don't need.  Open up <code>melissa_is_a_babe/templates/index.html</code> (which is a <code>genshi</code> template) and scoop out its guts so it looks like:
+<p>Time to shave away stuff we don't need.  Open up
+<code>melissa_is_a_babe/templates/index.html</code> (which is a
+<code>genshi</code> template) and scoop out its guts so it looks like:</p>
 
-[sourcecode language="html"]
+$$code(lang=html, style=monokai)
 &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml"
@@ -118,27 +143,48 @@ Time to shave away stuff we don't need.  Open up <code>melissa_is_a_babe/templat
 
 &lt;/body&gt;
 &lt;/html&gt;
-[/sourcecode]
+$$/code
 
-Since we told <code>paster</code> to launch our app with the <code>--reload</code> option, it should automatically notice we changed something and be ready for us.  Return to your browser, reload the page and behold:
+<p>Since we told <code>paster</code> to launch our app with the
+<code>--reload</code> option, it should automatically notice we changed
+something and be ready for us.  Return to your browser, reload the page and
+behold:</p>
 
-[caption id="attachment_44" align="aligncenter" width="300" caption="The tg2.1 index page with its guts scooped out"]<a href="http://threebean.files.wordpress.com/2010/10/sshot2.png"><img alt="The tg2.1 index page with its guts scooped out" class="size-medium wp-image-44" height="176" src="http://threebean.files.wordpress.com/2010/10/sshot2.png?w=300" title="sshot2" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot2.png"><img alt="The tg2.1 index page with its guts scooped out" class="size-medium wp-image-44" height="176" src="http://threebean.files.wordpress.com/2010/10/sshot2.png?w=300" title="sshot2" width="300" /></a>
 
-Not very exciting now, is it?
+<p>Not very exciting now, is it?</p>
 
 <h1>Our first <em>tw2.protovis</em> chart</h1>
 
-Open up <code>melissa_is_a_babe/controllers/root.py</code>.  There you'll find a class called RootController with a number of methods.  When you visit a particular location, say, <code>http://localhost:8080/foobar</code>, your TG2.1 BaseController will redirect the flow of control to your RootController's <code>foobar</code> method (if it has one).
+<p>Open up <code>melissa_is_a_babe/controllers/root.py</code>.  There you'll
+find a class called RootController with a number of methods.  When you visit a
+particular location, say, <code>http://localhost:8080/foobar</code>, your TG2.1
+BaseController will redirect the flow of control to your RootController's
+<code>foobar</code> method (if it has one).</p>
 
-We don't need any of the methods other than <code>index</code> so you can go ahead and remove them.
+<p>We don't need any of the methods other than <code>index</code> so you can go
+ahead and remove them.</p>
 
-Inside the <code>index</code> method, we're going to configure an instance of <code>tw2.protovis.custom.BubbleChart</code> and return it to the WSGI context.  At the top <code>root.py</code> add the appropriate import statements to bring in the <code>random</code> module and the <code>BubbleChart</code> class from the <code>tw2.protovis.custom</code> module.  As for the <code>index</code> method, we'll need to do three things:  1) initialize some bogus data to visualize, 2) fill in the parameters for <code>BubbleChart</code>, and 3) return our configured widget from the controller method.
+<p>Inside the <code>index</code> method, we're going to configure an instance of
+<code>tw2.protovis.custom.BubbleChart</code> and return it to the WSGI context.
+At the top <code>root.py</code> add the appropriate import statements to bring
+in the <code>random</code> module and the <code>BubbleChart</code> class from
+the <code>tw2.protovis.custom</code> module.  As for the <code>index</code>
+method, we'll need to do three things:  1) initialize some bogus data to
+visualize, 2) fill in the parameters for <code>BubbleChart</code>, and 3) return
+our configured widget from the controller method.</p>
 
-As for our bogus data, the <code>p_data</code> parameter requires a list of python dictionaries (we'll create 40 of them), each with four keys:  a <code>'name'</code> that provides the alt-text for the bubbles, a <code>'value'</code> that provides the size of each, a <code>'text'</code> that provides the label, and a <code>'group'</code> which is the basis on which to colorize them.
+<p>As for our bogus data, the <code>p_data</code> parameter requires a list of
+python dictionaries (we'll create 40 of them), each with four keys:  a
+<code>'name'</code> that provides the alt-text for the bubbles, a
+<code>'value'</code> that provides the size of each, a <code>'text'</code> that
+provides the label, and a <code>'group'</code> which is the basis on which to
+colorize them.</p>
 
-Mangle <code>melissa_is_a_babe/controllers/root.py</code> to look like this:
+<p>Mangle <code>melissa_is_a_babe/controllers/root.py</code> to look like
+this:</p>
 
-[sourcecode language="python" highlight="13,14,36,37,38,39,40,41,42,44,45,46,47,48,49,51"]
+$$code(lang=python, style=monokai)
 # -*- coding: utf-8 -*-
 """Main Controller"""
 
@@ -190,25 +236,34 @@ class RootController(BaseController):
         )
 
         return dict(page='index', widget=chart)
-[/sourcecode]
+$$/code
 
-Now that our bubble chart of random data is available to our templates, we'll need to make mention of it in <code>melissa_is_a_babe/templates/index.html</code>.  Just add the following single line inside the <code>body</code> tag.
+<p>Now that our bubble chart of random data is available to our templates, we'll
+need to make mention of it in
+<code>melissa_is_a_babe/templates/index.html</code>.  Just add the following
+single line inside the <code>body</code> tag.</p>
 
-[sourcecode language="html" light="true" highlight="2"]
+$$code(lang=html, style=monokai)
 &lt;body&gt;
 ${widget.display()}
 &lt;/body&gt;
-[/sourcecode]
+$$/code
 
-Again, <code>paster</code> should have noticed we changed something and restarted itself.  Revisit <code>http://localhost:8080</code> and you should see something like:
+<p>Again, <code>paster</code> should have noticed we changed something and
+restarted itself.  Revisit <code>http://localhost:8080</code> and you should see
+something like:</p>
 
-[caption id="attachment_48" align="aligncenter" width="300" caption="tw2.protovis.custom.BubbleChart with random data"]<a href="http://threebean.files.wordpress.com/2010/10/sshot3.png"><img alt="tw2.protovis.custom.BubbleChart with random data" class="size-medium wp-image-48" height="187" src="http://threebean.files.wordpress.com/2010/10/sshot3.png?w=300" title="sshot3" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot3.png"><img alt="tw2.protovis.custom.BubbleChart with random data" class="size-medium wp-image-48" height="187" src="http://threebean.files.wordpress.com/2010/10/sshot3.png?w=300" title="sshot3" width="300" /></a>
 
 <h1>Querying Google's Ajax Search API</h1>
 
-Cool?  Cool.  Well, sort of.  Random numbers are unfortunately not as interesting as we might like them to be so let's do something a little less entropic.  Google has a <a href="http://code.google.com/apis/ajaxsearch/">sweet ajax search API</a> we can use.  Add the following to the top of <code>melissa_is_a_babe/controllers/root.py</code>
+<p>Cool?  Cool.  Well, sort of.  Random numbers are unfortunately not as
+interesting as we might like them to be so let's do something a little less
+entropic.  Google has a <a href="http://code.google.com/apis/ajaxsearch/">sweet
+  ajax search API</a> we can use.  Add the following to the top of
+<code>melissa_is_a_babe/controllers/root.py</code></p>
 
-[sourcecode language="python" light="true"]
+$$code(lang=python, style=monokai)
 import itertools
 
 import urllib
@@ -239,21 +294,33 @@ def make_entry(combo):
         'text' : phrase[:10],
         'group' : len(combo),
     }
-[/sourcecode]
+$$/code
 
-The above function will, given a list of words (combo), perform a google search on that exact phrase and return a python dictionary ready for BubbleChart the value of which is the estimatedResultCount of the search term.  We use the urllib module to prepare and make our query and the simplejson module to convert the json (javascript object notation) that google hands us into a python dictionary.
+<p>The above function will, given a list of words (combo), perform a google
+search on that exact phrase and return a python dictionary ready for BubbleChart
+the value of which is the estimatedResultCount of the search term.  We use the
+urllib module to prepare and make our query and the simplejson module to convert
+the json (javascript object notation) that google hands us into a python
+dictionary.</p>
 
-We'll need to make use of the <code>make_entry</code> function in our controller.
+<p>We'll need to make use of the <code>make_entry</code> function in our
+controller.</p>
 
-Keyword arguments passed to our app via the URL's query string arrive as keyword arguments to controller methods.  Let's add one to the <code>index</code> method called <code>sentence</code>.
+<p>Keyword arguments passed to our app via the URL's query string arrive as
+keyword arguments to controller methods.  Let's add one to the
+<code>index</code> method called <code>sentence</code>.</p>
 
-Furthermore, we'll take that sentence, break it up into its constituent words and, making use of the itertools module, prepare a list of every unique combination of words in that sentence.
+<p>Furthermore, we'll take that sentence, break it up into its constituent words
+and, making use of the itertools module, prepare a list of every unique
+combination of words in that sentence.</p>
 
-With our <code>make_entry</code> function and such a list of word combinations, its trivial to map our list to a map of BubbleChart-ready <code>dict</code> objects.
+<p>With our <code>make_entry</code> function and such a list of word
+combinations, its trivial to map our list to a map of BubbleChart-ready
+<code>dict</code> objects.</p>
 
-Modify <code>melissa_is_a_babe/controllers/root.py</code> as follows:
+<p>Modify <code>melissa_is_a_babe/controllers/root.py</code> as follows:</p>
 
-[sourcecode language="python" light="true" highlight="2,4,5,6,7,9"]
+$$code(lang=python, style=monokai)
     @expose('melissa_is_a_babe.templates.index')
     def index(self, sentence="word to your moms"):
         """Handle the front-page."""
@@ -272,23 +339,32 @@ Modify <code>melissa_is_a_babe/controllers/root.py</code> as follows:
         )
 
         return dict(page='index', widget=chart)
-[/sourcecode]
+$$/code
 
-Reload the page <code>http://localhost:8080/</code> and you should get something like:
+<p>Reload the page <code>http://localhost:8080/</code> and you should get
+something like:</p>
 
-[caption id="attachment_53" align="aligncenter" width="300" caption="BubbleChart of google results of every combination of "word to your moms""]<a href="http://threebean.files.wordpress.com/2010/10/sshot4.png"><img alt="BubbleChart of google results of every combination of " src="http://threebean.files.wordpress.com/2010/10/sshot4.png?w=300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot4.png"><img alt="BubbleChart of google results of every combination of " src="http://threebean.files.wordpress.com/2010/10/sshot4.png?w=300" /></a>
 
-Since we made <code>sentence</code> a keyword argument to our <code>index</code> method, we should also be able to visit <code>http://localhost:8080/index?sentence=the+quick+brown+fox+jumps+over+the+lazy+dog</code> and see a pretty dope chart.
+<p>Since we made <code>sentence</code> a keyword argument to our
+<code>index</code> method, we should also be able to visit
+<code>http://localhost:8080/index?sentence=the+quick+brown+fox+jumps+over+the+lazy+dog</code>
+and see a pretty dope chart.</p>
 
-[caption id="attachment_55" align="aligncenter" width="300" caption="BubbleChart of "the quick brown fox jumps over the lazy dog""]<a href="http://threebean.files.wordpress.com/2010/10/sshot51.png"><img alt="BubbleChart of " src="http://threebean.files.wordpress.com/2010/10/sshot51.png?w=300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot51.png"><img alt="BubbleChart of " src="http://threebean.files.wordpress.com/2010/10/sshot51.png?w=300" /></a>
 
 <h1>Speeding things up with <em>multiprocessing</em></h1>
 
-Wow.. that was cool but it took <em>forever</em> to make all those queries.  What exactly is it that's taking so much time?  It seems to be all the handshaking and waiting for a response before making the next request.  We can likely speed this up greatly by making use of python's <code>multiprocessing</code> module.
+<p>Wow.. that was cool but it took <em>forever</em> to make all those queries.
+What exactly is it that's taking so much time?  It seems to be all the
+handshaking and waiting for a response before making the next request.  We can
+likely speed this up greatly by making use of python's
+<code>multiprocessing</code> module.</p.
 
-Just below your definition of the <code>make_entity</code> function, add the following lines:
+<p>Just below your definition of the <code>make_entity</code> function, add the
+following lines:</p>
 
-[sourcecode language="python" light="true" highlight="8,9"]
+$$code(lang=python, style=monokai)
     return {
         'name' : "%s : %i " % (phrase, count),
         'value' : value,
@@ -300,11 +376,15 @@ from multiprocessing import Pool
 pool = Pool(processes=150)
 
 class RootController(BaseController):
-[/sourcecode]
+$$/code
 
-The Pool class has a map method that performs the same operation as the builtin map, but distributes the workload among all available processes.  Inside the <code>index</code> method, make use of the thread pool when mapping <code>make_entity</code> onto the list of word combinations.  Change the highlighted line as follows:
+<p>The Pool class has a map method that performs the same operation as the
+builtin map, but distributes the workload among all available processes.  Inside
+the <code>index</code> method, make use of the thread pool when mapping
+<code>make_entity</code> onto the list of word combinations.  Change the
+highlighted line as follows:</p>
 
-[sourcecode language="python" light="true" highlight="4"]
+$$code(lang=python, style=monokai)
         for i in range(len(words)):
             combos += list(itertools.combinations(words, i+1))
 
@@ -312,15 +392,21 @@ The Pool class has a map method that performs the same operation as the builtin 
 
         chart = BubbleChart(
             id='a-chart-for-my-friends',
-[/sourcecode]
+$$/code
 
-Repoint your browser at <code>http://localhost:8080/index?sentence=the+quick+brown+fox+jumps+over+the+lazy+dog</code> and it should fly!
+<p>Repoint your browser at
+<code>http://localhost:8080/index?sentence=the+quick+brown+fox+jumps+over+the+lazy+dog</code>
+and it should fly!</p>
 
 <h1>Sorting our data gives different results</h1>
 
-One last thing:  BubbleChart places the bubbles in the order they are given and tries to pack each subsequent entry as tightly as it can.  We can achieve differently flavored charts by reordering our list of dicts.  In <code>melissa_is_a_babe/controllers/root.py</code> try adding the following line:
+<p>One last thing:  BubbleChart places the bubbles in the order they are given
+and tries to pack each subsequent entry as tightly as it can.  We can achieve
+differently flavored charts by reordering our list of dicts.  In
+<code>melissa_is_a_babe/controllers/root.py</code> try adding the following
+line:</p>
 
-[sourcecode language="python" light="true" highlight="5"]
+$$code(lang=python, style=monokai)
         for i in range(len(words)):
             combos += list(itertools.combinations(words, i+1))
 
@@ -329,15 +415,18 @@ One last thing:  BubbleChart places the bubbles in the order they are given and 
 
         chart = BubbleChart(
             id='a-chart-for-my-friends',
-[/sourcecode]
+$$/code
 
-Which gives us the following:
+<p>Which gives us the following:</p>
 
-[caption id="attachment_56" align="aligncenter" width="300" caption="BubbleChart with data sorted by value"]<a href="http://threebean.files.wordpress.com/2010/10/sshot6.png"><img alt="BubbleChart with data sorted by value" class="size-medium wp-image-56" height="187" src="http://threebean.files.wordpress.com/2010/10/sshot6.png?w=300" title="sshot6" width="300" /></a>[/caption]
+<a href="http://threebean.files.wordpress.com/2010/10/sshot6.png"><img alt="BubbleChart with data sorted by value" class="size-medium wp-image-56" height="187" src="http://threebean.files.wordpress.com/2010/10/sshot6.png?w=300" title="sshot6" width="300" /></a>
 
 <h1>Resources</h1>
-You can find the full source code for this tutorial on my <a href="http://github.com/ralphbean/barcamp.roc.fall.2010">github account</a>
+<p>You can find the full source code for this tutorial on my <a
+  href="http://github.com/ralphbean/barcamp.roc.fall.2010">github
+  account</a></p>
 
-Live demonstrations of <em>all</em> my widgets are available at <a href="http://craftsman.rc.rit.edu/">http://craftsman.rc.rit.edu/</a>
+<p>Live demonstrations of <em>all</em> my widgets are available at <a
+  href="http://tw2-demos.threebean.org/">http://tw2-demos.threebean.org/</a></p>
 
-Cheers!
+<p>Cheers!</p>
