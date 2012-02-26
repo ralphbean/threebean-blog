@@ -30,7 +30,7 @@ Along the way, I picked up this `handy hack
 <http://techspot.zzzeek.org/2010/12/06/my-blogofile-hacks/>`_ from zzzeek on
 getting syntax highlighting working in reST posts.
 
-I also had to script something up with ``lxml`` to parse my exported
+I also had to script something up with ``feedparser`` to parse my exported
 WordPress blog's and reimport it to blogofile.  Here's what I wrote (It's
 based heavily on `this example
 <https://raw.github.com/EnigmaCurry/blogofile/master/converters/wordpress2blogofile.py>`_
