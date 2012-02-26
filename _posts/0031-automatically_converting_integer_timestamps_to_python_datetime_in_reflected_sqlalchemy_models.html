@@ -49,24 +49,24 @@ def add_datetime_properties(cls):
     corresponding '_datetime' property that converts to and from seconds 
     since the epoch.
 
-    Author:  Ralph Bean &lt;ralph.bean@gmail.com&gt;
+    Author:  Ralph Bean <ralph.bean@gmail.com>
 
     Use like::
-        &gt;&gt;&gt; DBSession = scoped_session(maker)
-        &gt;&gt;&gt; DBSession.configure(bind=engine)
-        &gt;&gt;&gt; metadata = MetaData(engine.url)
-        &gt;&gt;&gt; table = Table('thing_table', metadata, autoload=True)
+        >>> DBSession = scoped_session(maker)
+        >>> DBSession.configure(bind=engine)
+        >>> metadata = MetaData(engine.url)
+        >>> table = Table('thing_table', metadata, autoload=True)
 
-        &gt;&gt;&gt; class Thing(object):
+        >>> class Thing(object):
         ...     pass
-        &gt;&gt;&gt; mapper(Thing, table)
+        >>> mapper(Thing, table)
 
-        &gt;&gt;&gt; add_datetime_properties(Thing)
+        >>> add_datetime_properties(Thing)
 
-        &gt;&gt;&gt; t = DBSession.query(Thing).first()
-        &gt;&gt;&gt; print t.create_time
+        >>> t = DBSession.query(Thing).first()
+        >>> print t.create_time
         ... 1314900554
-        &gt;&gt;&gt; print t.create_datetime
+        >>> print t.create_datetime
         ... 2011-09-01 14:09:14
     """
 

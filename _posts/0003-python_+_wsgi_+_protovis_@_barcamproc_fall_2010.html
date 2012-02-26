@@ -125,24 +125,24 @@ see the default quickstarted Turbogears index page.</p>
 <code>genshi</code> template) and scoop out its guts so it looks like:</p>
 
 $$code(lang=html, style=monokai)
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+      xmlns:xi="http://www.w3.org/2001/XInclude">
 
-  &lt;xi:include href="master.html" /&gt;
+  <xi:include href="master.html" />
 
-&lt;head&gt;
-  &lt;meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/&gt;
-  &lt;title&gt;Welcome to TurboGears 2.0, standing on the 
-  shoulders of giants, since 2007&lt;/title&gt;
-&lt;/head&gt;
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <title>Welcome to TurboGears 2.0, standing on the 
+  shoulders of giants, since 2007</title>
+</head>
 
-&lt;body&gt;
+<body>
 
-&lt;/body&gt;
-&lt;/html&gt;
+</body>
+</html>
 $$/code
 
 <p>Since we told <code>paster</code> to launch our app with the
@@ -244,9 +244,9 @@ need to make mention of it in
 single line inside the <code>body</code> tag.</p>
 
 $$code(lang=html, style=monokai)
-&lt;body&gt;
+<body>
 ${widget.display()}
-&lt;/body&gt;
+</body>
 $$/code
 
 <p>Again, <code>paster</code> should have noticed we changed something and

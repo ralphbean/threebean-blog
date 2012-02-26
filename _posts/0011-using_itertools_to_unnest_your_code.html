@@ -46,7 +46,7 @@ if __name__ == '__main__':
     result1 = list(nested_generator(carnivores, herbivores, plants))
     result2 = list(itertools_generator(carnivores, herbivores, plants))
     are_they_equal = (result1 == result2)
-    print "Gravey? --&gt;", are_they_equal # Gravey!
+    print "Gravey? -->", are_they_equal # Gravey!
 
     # Test to show that they run in an equivalent amount of time
     from timeit import Timer

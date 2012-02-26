@@ -63,7 +63,7 @@ well as tell TG2.1 to use the tw2 middleware instead of tw1.</p>
 $$code(lang=python, style=monokai)
 from tgext.admin.tgadminconfig import TGAdminConfig
 from tgext.admin.controller import AdminController
- ... &lt; snip &gt; ...
+ ... < snip > ...
     admin = AdminController(model, DBSession, config_type=TGAdminConfig)
 $$/code
 
@@ -238,7 +238,7 @@ $$/code
 lines:</p>
 
 $$code(lang=html, style=monokai)
-&lt;%inherit file="local:templates.master"/&gt;
+<%inherit file="local:templates.master"/>
 ${widget.display() | n }
 $$/code
 
@@ -279,12 +279,12 @@ $$code(lang=python, style=monokai)
         """ 'hover_html' is the only supported key at present """
         return {
             'hover_html' : """
-            &lt;h2&gt;{display_name}&lt;/h2&gt;
-            &lt;img src="{gravatar_url}" /&gt;
-            &lt;ul&gt;
-                &lt;li&gt;{user_name}&lt;/li&gt;
-                &lt;li&gt;{created}&lt;/li&gt;
-            &lt;/ul&gt;
+            <h2>{display_name}</h2>
+            <img src="{gravatar_url}" />
+            <ul>
+                <li>{user_name}</li>
+                <li>{created}</li>
+            </ul>
             """.format(gravatar_url=self.gravatar_url, **self.__dict__)
         }
 $$/code
@@ -329,7 +329,7 @@ $$code(lang=python, style=monokai)
                 domElement.style.left = (left - w /2) + 'px';
 
                 domElement.style.cursor = 'pointer';
-                if ( node._depth &lt;= 1 )
+                if ( node._depth <= 1 )
                     domElement.style.color = 'black';
                 else
                     domElement.style.color = 'grey';

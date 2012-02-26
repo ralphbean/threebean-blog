@@ -275,7 +275,7 @@ wipe out <em>all</em> of the content.  Replace it with <em>only</em> the
 following:</p>
 
 $$code(lang=html, style=monokai)
-&lt;%inherit file="local:templates.master"/&gt;
+<%inherit file="local:templates.master"/>
 ${gridwidget.display() | n}
 $$/code
 
@@ -284,7 +284,7 @@ $$/code
 <p>The <code>SQLAjqGridWidget</code> has a <code>request(...)</code> method that
 does all of its magic (interrogating your <code>sqlalchemy</code> model for its
 properties and values).  We still need to wire up our TurboGears app to forward
-the <em>ajax&lt;-&gt;json</em> requests to the right place.<p>
+the <em>ajax<->json</em> requests to the right place.<p>
 
 <p>To do this, <strong>add</strong> another method to your
 <code>RootController</code> back in
@@ -302,24 +302,24 @@ just the <code>jqgrid</code>), like so:</p>
 
 $$code(lang=python, style=monokai)
     install_requires=[
-        "TurboGears2 &gt;= 2.1",
+        "TurboGears2 >= 2.1",
         "Mako",
-        "zope.sqlalchemy &gt;= 0.4",
-        "repoze.tm2 &gt;= 1.0a5",
+        "zope.sqlalchemy >= 0.4",
+        "repoze.tm2 >= 1.0a5",
         "repoze.what-quickstart",
-        "repoze.what &gt;= 1.0.8",
+        "repoze.what >= 1.0.8",
         "repoze.what-quickstart",
-        "repoze.who-friendlyform &gt;= 1.0.4",
-        "repoze.what-pylons &gt;= 1.0",
+        "repoze.who-friendlyform >= 1.0.4",
+        "repoze.what-pylons >= 1.0",
         "repoze.what.plugins.sql",
         "repoze.who == 1.0.18",
-        "tgext.admin &gt;= 0.3.9",
+        "tgext.admin >= 0.3.9",
         "tw.forms",
         "tw2.jqplugins.jqgrid",
         "tw2.jqplugins.jqplot",
         "tw2.jqplugins.portlets",
         ],
-    setup_requires=["PasteScript &gt;= 1.7"],
+    setup_requires=["PasteScript >= 1.7"],
 $$/code
 
 <p><strong>Install</strong> the newly listed dependencies by running:</p>
@@ -472,7 +472,7 @@ $$code(lang=python, style=monokai)
         then = now - datetime.timedelta(days)
         delta = datetime.timedelta(days) / n_buckets
 
-        entries = ServerHit.query.filter(ServerHit.timestamp&gt;then).all()
+        entries = ServerHit.query.filter(ServerHit.timestamp>then).all()
 
         t_bounds = [(then+delta*i, then+delta*(i+1)) for i in range(n_buckets)]
 
@@ -480,7 +480,7 @@ $$code(lang=python, style=monokai)
         buckets = dict([(lower, 0) for lower, upper in t_bounds])
         for entry in entries:
             for lower, upper in t_bounds:
-                if entry.timestamp &gt;= lower and entry.timestamp &lt; upper:
+                if entry.timestamp >= lower and entry.timestamp < upper:
                     buckets[lower] += 1
 
         # Only one series for now.. but you could do other stuff!
@@ -521,7 +521,7 @@ available in your <code>index</code> template under the name
 <strong>add</strong> the following line:</p>
 
 $$code(lang=html, style=monokai)
-&lt;%inherit file="local:templates.master"/&gt;
+<%inherit file="local:templates.master"/>
 ${plotwidget.display() | n}
 ${gridwidget.display() | n}
 $$/code
@@ -575,7 +575,7 @@ $$/code
 <code>tw2facemelttg21/templates/index.mak</code>.</p>
 
 $$code(lang=html, style=monokai)
-&lt;%inherit file="local:templates.master"/&gt;
+<%inherit file="local:templates.master"/>
 ${layoutwidget.display() | n}
 $$/code
 
@@ -585,12 +585,12 @@ time) <code>tw2facemelttg21/templates/master.mak</code> to look like this:</p>
 
 
 $$code(lang=html, style=monokai)
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html&gt;
-&lt;head&gt;&lt;/head&gt;
-&lt;body&gt;${self.body()}&lt;/body&gt;
-&lt;/html&gt;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head></head>
+<body>${self.body()}</body>
+</html>
 $$/code
 
 <p><strong>Rerun</strong> your paster server and you should see something like

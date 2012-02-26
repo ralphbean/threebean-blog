@@ -45,7 +45,7 @@ class PythonInterpreter(object):
         if self.eoc in self.lastline:
             i = self.lastline.index(self.eoc)
             return self.lastline[:i]
-        return "&gt;&gt;&gt;"
+        return ">>>"
 
     def command(self, index):
         return self.cmd_history[index]

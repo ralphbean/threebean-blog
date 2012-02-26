@@ -11,8 +11,8 @@ ansi as input and produces colored, formatted html.</p>
 
 <p>With it you can do something like the following:</p>
 $$code(lang=text, style=monokai)
-$ ls --color=always | ansi2html &gt; directory.html
-$ sudo tail /var/log/messages | ccze -A | ansi2html &gt; logs.html
+$ ls --color=always | ansi2html > directory.html
+$ sudo tail /var/log/messages | ccze -A | ansi2html > logs.html
 $$/code
 
 <p>Much more recently I discovered <a
@@ -25,7 +25,7 @@ your todos over time.</p>
 chart.</p>
 
 $$code(lang=text, style=monokai)
-$ task burndown | ansi2html | ssh me@web "cat &gt; ~/static/burndown.html"
+$ task burndown | ansi2html | ssh me@web "cat > ~/static/burndown.html"
 $$/code
 
 <p>My regularly-updated chart is hosted on <a

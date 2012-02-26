@@ -44,19 +44,19 @@ $$/code
 
 
 $$code(lang=python, style=monokai)
-&gt;&gt;&gt; with cmshelve('foo.db') as d:
+>>> with cmshelve('foo.db') as d:
 ...     d['foo'] = "bar"
 ...     print d
 {'foo': 'bar'}
 
-&gt;&gt;&gt; # This proves that the shelve was actually closed
-&gt;&gt;&gt; print d
+>>> # This proves that the shelve was actually closed
+>>> print d
 Traceback (most recent call last):
-File "&lt;stdin&gt;", line 1, in ?
+File "<stdin>", line 1, in ?
 ValueError: invalid operation on closed shelf
 
-&gt;&gt;&gt; # And as you'd expect, you can go back and re-open it just fine
-&gt;&gt;&gt; with cmshelve('foo.db') as d:
+>>> # And as you'd expect, you can go back and re-open it just fine
+>>> with cmshelve('foo.db') as d:
 ...     print d
 {'foo': 'bar'}
 $$/code
