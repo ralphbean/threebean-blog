@@ -6,7 +6,7 @@ title: New toscawidgets.org frontpage
 ---
 
 The `toscawidgets2 24 hour bugsprint
-<http://threebean.org/blog/2012/02/07/announcing-24-hour-tw2-bug-sprint-for-pycon/>`_
+<http://threebean.org/blog/announcing-tw2-bugsprint>`_
 is this coming Saturday!  In order to get you excited and to `curry all of your
 favors`, I decided to give http://toscawidgets.org a facelift.
 
