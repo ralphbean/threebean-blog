@@ -54,7 +54,7 @@ from the blogofile github repo::
     def get_published_posts(filename):
         """ Generator over the posts in a wordpress.com XML dump. """
 
-        d = feedparser.parse('test.xml')
+        d = feedparser.parse(filename)
 
         for entry in d['entries']:
             if entry.get('wp_attachment_url', None):
@@ -79,7 +79,7 @@ from the blogofile github repo::
         prepend_links = True
 
         post_num = 1
-        for post in get_published_posts('test.xml'):
+        for post in get_published_posts('wordpress-export.xml'):
             yaml_data = {
                 "title": post['title'],
                 "date": post['wp_post_date'].replace('-', '/'),
