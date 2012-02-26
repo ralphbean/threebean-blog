@@ -2,6 +2,9 @@
         margin: 0;
         target-new: tab ! important
 }
+div#main_block img {
+        width: 650px;
+}
 div.pygments_monokai {
         padding: 10px;
         -webkit-border-radius: 15px;
