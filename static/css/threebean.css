@@ -2,6 +2,12 @@
         margin: 0;
         target-new: tab ! important
 }
+div.pygments_monokai {
+        padding: 10px;
+        -webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
+}
 p {
         margin: 9px;
 }
