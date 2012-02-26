@@ -51,5 +51,6 @@ blog.name = "[three]Bean"
 blog.timezone = "US/Eastern"
 
 blog.post_default_filters = {
-    "rst": "rst, rst_syntax_highlight"
+    "rst": "rst, rst_syntax_highlight",
+    "html": "syntax_highlight",
 }
