@@ -1,0 +1,88 @@
+---
+categories: code, python
+date: 2011/03/15 18:26:12
+permalink: http://threebean.org/blog/2011/03/15/using-itertools-to-un-nest-your-code/
+tags: code, python
+title: Using itertools to un-nest your code
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/03/15/using-itertools-to-un-nest-your-code/'>http://threebean.wordpress.com/2011/03/15/using-itertools-to-un-nest-your-code/</a>.</p>
+<p>Do you ever write code that becomes way nested and totally out of hand?
+Being smart with itertools can help un-indent your biz.</p>
+
+<p>Below follow two functions definitions: <code>nested_generator</code> and
+<code>itertools_generator</code>.  Put them in a module named
+<code>itertools_blogpost.py</code>.</p>
+
+$$code(lang=python, style=monokai)
+from itertools import product
+
+def nested_generator(carnivores, herbivores, plants):
+    """ You do this every day. """
+    for carnivore in carnivores:
+        for herbivore in herbivores:
+            for plant in plants:
+                yield "%s eat %s eat %s" % (carnivore, herbivore, plant)
+
+def itertools_generator(carnivores, herbivores, plants):
+    """ This can 'flatten' your code,
+    make it less nested, more pythonic. """
+    for carnivore, herbivore, plant in product(carnivores, herbivores, plants):
+        yield "%s eat %s eat %s" % (carnivore, herbivore, plant)
+$$/code
+
+<p>Let's test it with another script.</p>
+
+$$code(lang=python, style=monokai)
+#!/usr/bin/env python
+
+from itertools_blogpost import nested_generator, itertools_generator
+
+if __name__ == '__main__':
+    # Operate on these lists
+    carnivores = ["lions", "tigers", "bears"]
+    herbivores = ["hippies"]
+    plants = ["carrots", "beets", "garlic"]
+
+    # Test to show that the two functions are `equivalent`
+    result1 = list(nested_generator(carnivores, herbivores, plants))
+    result2 = list(itertools_generator(carnivores, herbivores, plants))
+    are_they_equal = (result1 == result2)
+    print "Gravey? --&gt;", are_they_equal # Gravey!
+
+    # Test to show that they run in an equivalent amount of time
+    from timeit import Timer
+    nested_timer = Timer(
+        """
+        carnivores = ["lions", "tigers", "bears"]
+        herbivores = ["hippies"]
+        plants = ["carrots", "beets", "garlic"]
+        nested_generator(carnivores, herbivores, plants)
+        """, "from itertools_blogpost import nested_generator")
+
+    itertools_timer = Timer(
+        """
+        carnivores = ["lions", "tigers", "bears"]
+        herbivores = ["hippies"]
+        plants = ["carrots", "beets", "garlic"]
+        itertools_generator(carnivores, herbivores, plants)
+        """, "from itertools_blogpost import itertools_generator")
+
+    nested_times = nested_timer.repeat()
+    itertools_times =  itertools_timer.repeat()
+    n = len(nested_times)
+
+    print "          Nested  Iter"
+    print "Maximum   {0:2.3f}   {1:2.3f}".format(
+        max(nested_times), max(itertools_times))
+    print "Minimum   {0:2.3f}   {1:2.3f}".format(
+        min(nested_times), min(itertools_times))
+    print "Average   {0:2.3f}   {1:2.3f}".format(
+        sum(nested_times)/n, sum(itertools_times)/n)
+$$/code
+
+<p>Their output is equivalent and (run it for yourself) the times are
+<em>roughly</em> equivalent.  Sometimes one comes out on top of the other,
+sometimes vice versa.  No statistically significant difference.</p>
+
+<p>The upshot:  with <code>itertools.product</code> you can say goodbye to
+awfully nested for loops.</p>

@@ -1,0 +1,200 @@
+---
+categories: code, ldap, python, turbogears
+date: 2011/07/19 16:24:24
+permalink: http://threebean.org/blog/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/
+tags: code, ldap, python, turbogears
+title: Using repoze.who.plugins.ldap in a TurboGears 2.1 app
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/'>http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/</a>.</p>Often, you will need to authenticate against <code>ldap</code> in your webapp.  Here's how to make that happen in a freshly quickstarted TurboGears 2.1 app.
+
+<h2>Setting up your environment</h2>
+[sourcecode language="bash"]
+mkvirtualenv --no-site-packages repoze-ldap-app
+pip install tg.devtools
+paster quickstart   # call the app repoze-ldap-app, yes to mako and auth
+cd repoze-ldap-app
+python setup.py develop
+pip install genshi  # This is a workaround.
+paster setup-app development.ini
+paster serve development.ini  # To test if the basic app works.
+[/sourcecode]
+
+Point your browser at <a href="http://localhost:8080">http://localhost:8080</a> just to make sure everything is cool.
+
+<h2>Setting up <code>repoze.who.plugins.ldap</code></h2>
+<strong>Add</strong> the following line to the <code>install_requires</code> list in <code>setup.py</code>:
+
+[sourcecode language="python"]
+    "repoze.who.plugins.ldap",
+[/sourcecode]
+
+Run <code>python setup.py develop</code> to install the newly listed repoze plugin.
+
+<strong>Add</strong> the following four lines to <code>development.ini</code> which reference an as yet unwritten secondary configuration file.  Place them just above the <code>sqlalchemy.url=...</code> lines:
+
+[sourcecode language="text"]
+# Repoze.who stuff
+who.config_file = %(here)s/who.ini
+who.log_level = INFO
+who.log_stream = stdout
+[/sourcecode]
+
+<strong>Create</strong> a new file <code>who.ini</code> with the following contents:
+
+[sourcecode language="text"]
+# This file is adapted from:
+# http://threebean.wordpress.com/2011/07/19/using-repoze-who-plugins-ldap-in-a-turbogears-2-1-app/
+# which has been adapted from:
+# http://static.repoze.org/whodocs/#middleware-configuration-via-config-file
+# which has been adapted from:
+# http://code.gustavonarea.net/repoze.who.plugins.ldap/Using.html
+
+[plugin:friendlyform]
+use = repoze.who.plugins.friendlyform:FriendlyFormPlugin
+login_form_url= /login
+login_handler_path = /login_handler
+logout_handler_path = /logout_handler
+rememberer_name = auth_tkt
+post_login_url = /post_login
+post_logout_url = /post_logout
+
+[plugin:auth_tkt]
+use = repoze.who.plugins.auth_tkt:make_plugin
+secret = omg_this_is_so_secret_lololololol_2938485#butts
+
+[plugin:ldap_auth]
+# Here I use my own ldap_auth, since by default ldap allows affirmative
+# authentication with *no password specified*.  That is lame; I override it.
+use = repozeldapapp.lib.auth:ReconnectingAuthenticatorPlugin
+
+# This is the URI of wherever you want to connect to.  I work at RIT.
+ldap_connection = ldap://ldap.rit.edu
+
+# This is the base of the 'distinguished names' (DNs) of persons in your
+# particular LDAP instance.  It will vary from server to server.
+base_dn = ou=People,dc=rit,dc=edu
+
+[plugin:ldap_attributes]
+# I also do some overriding for more security in how I get attributes for
+# users.
+use = repozeldapapp.lib.auth:ReconnectingLDAPAttrsPlugin
+ldap_connection = ldap://ldap.rit.edu
+
+[general]
+request_classifier = repoze.who.classifiers:default_request_classifier
+challenge_decider = repoze.who.classifiers:default_challenge_decider
+
+[mdproviders]
+plugins =
+    ldap_attributes
+
+[identifiers]
+plugins =
+    friendlyform;browser
+    auth_tkt
+
+[authenticators]
+plugins =
+    ldap_auth
+
+[challengers]
+plugins =
+    friendlyform;browser
+[/sourcecode]
+
+
+<strong>Create</strong> another new file <code>repozeldapapp/lib/auth.py</code> with the following contents:
+
+[sourcecode language="python"]
+from repoze.who.plugins.ldap import (
+    LDAPAttributesPlugin, LDAPAuthenticatorPlugin
+)
+import ldap
+
+
+class URISaver(object):
+    """ Saves the ldap_connection str given to repoze authn and authz """
+    def __init__(self, *args, **kw):
+        self.uri = kw['ldap_connection']
+        super(URISaver, self).__init__(*args, **kw)
+
+
+class ReconnectingLDAPAttrsPlugin(LDAPAttributesPlugin, URISaver):
+    """ Gets attributes from LDAP.  Refreshes connection if stale. """
+
+    def add_metadata(self, environ, identity):
+        """ Add ldap attributes to the `identity` entry. """
+
+        try:
+            return super(ReconnectingLDAPAttrsPlugin, self).add_metadata(
+                environ, identity)
+        except Exception, e:
+            print "FAILED TO CONNECT TO LDAP 1 : " + str(e)
+            print "Retrying..."
+            self.ldap_connection = ldap.initialize(self.uri)
+            return super(ReconnectingLDAPAttrsPlugin, self).add_metadata(
+                environ, identity)
+
+
+class ReconnectingAuthenticatorPlugin(LDAPAuthenticatorPlugin, URISaver):
+    """ Authenticates against LDAP.
+
+    - Refreshes connection if stale.
+    - Denies anonymously-authenticated users
+
+    """
+
+    def authenticate(self, environ, identity):
+        """ Extending the repoze.who.plugins.ldap plugin to make it much
+        more secure. """
+
+        res = None
+
+        try:
+            # This is unbelievable.  Without this, ldap will
+            #   let you bind anonymously
+            if not identity.get('password', None):
+                return None
+            try:
+                dn = self._get_dn(environ, identity)
+            except (KeyError, TypeError, ValueError):
+                return None
+
+            res = super(ReconnectingAuthenticatorPlugin, self).authenticate(
+                environ, identity)
+
+            # Sanity check here (for the same reason as the above check)
+            if "dn:%s" % dn != self.ldap_connection.whoami_s():
+                return None
+
+        except ldap.LDAPError, e:
+            print "FAILED TO CONNECT TO LDAP 2 : " + str(e)
+            print "Retrying..."
+            self.ldap_connection = ldap.initialize(self.uri)
+
+        return res
+[/sourcecode]
+
+Finally, do two things to <code>repozeldapapp/config/middleware.py</code>.
+
+<strong>Edit</strong> it and at the top of the file add:
+
+[sourcecode language="python"]
+from repoze.who.config import make_middleware_with_config
+[/sourcecode]
+
+<strong>Add</strong> the following inside the <code>make_app(...)</code> function, just below the comment line about Wrap your base TurboGears 2..., like so:
+
+[sourcecode language="python"]
+    # Wrap your base TurboGears 2 application with custom middleware here
+    app = make_middleware_with_config(
+        app, global_conf,
+        app_conf['who.config_file'],
+        app_conf['who.log_stream'],
+        app_conf['who.log_level'])
+[/sourcecode]
+
+<h2>Give it a test</h2>
+Restart the <code>paster</code> server and reload <a href="http://localhost:8080">http://localhost:8080</a>.  Try logging in as a user in your ldap instance and you should be all gravy.
+
+[caption id="" align="aligncenter"  width="256" caption="You should be all gravy."]<a href="http://www.flickr.com/photos/deathbeforedisco/3608101114"><img alt="You should be all gravy." height="192" src="http://farm4.static.flickr.com/3393/3608101114_22a355e9a5_b.jpg" title="You should be all gravy." width="256" /></a>[/caption]

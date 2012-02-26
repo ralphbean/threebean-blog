@@ -1,0 +1,43 @@
+---
+categories: code, python, turbogears
+date: 2011/12/13 05:44:53
+permalink: http://threebean.org/blog/2011/12/13/hacking-tw2-resource-injection/
+tags: code, python, turbogears
+title: Hacking tw2 resource injection
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/'>http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/</a>.</p>Tonight, <em>VooDooNOFX</em> was asking in IRC in #turbogears how to disable the injection of jquery.js by tw2.jquery into her/his TG2 app.  Using the <code>inject_resources=False</code> middleware config value wouldn't cut it, since she/he wanted tw2 to inject all <em>other</em> resources, they were loading jQuery via google CDN beforehand and tw2's injection was clobbering their code.
+
+I came up with the following hack to <code>myapp/lib/base.py</code> which will remove tw2.jquery.jquery_js from the list of resources tw2 would inject into each page served by a TG2.1 app.
+
+At the top of <code>myapp/lib/base.py</code> import:
+[sourcecode language="python"]
+import tw2.core.core
+import tw2.jquery
+[/sourcecode]
+
+and then replace:
+
+[sourcecode language="python"]
+        return TGController.__call__(self, environ, start_response)
+[/sourcecode]
+
+with the following:
+
+[sourcecode language="python"]
+        stream = TGController.__call__(self, environ, start_response)
+
+        # Disable the injection of tw2.jquery
+        offending_link = tw2.jquery.jquery_js.req().link
+        local = tw2.core.core.request_local()
+        local['resources'] = [
+            r for r in local.get('resources', list()) if r.link != offending_link
+        ]
+
+        return stream
+[/sourcecode]
+
+The two tricks to this are
+
+<ul><li>Simply knowing that tw2 resources register themselves with the 'request_local' object and that during the return-phase of the WSGI pipeline, the tw2 middleware refers to that list when injecting resources</li><li>Figuring out where in a TG2 app's request flow to place the call to alter that object <strong>after</strong> all widgets that might register jquery have declared their resources but <strong>before</strong> the resources list is injected into the output stream.</li></ul>
+
+We came out of it with <a href="https://bitbucket.org/paj/tw2core/issue/94/jquery-resource-injection">a bug filed in the tw2 issue tracker</a> so we can take care of it properly in the future.

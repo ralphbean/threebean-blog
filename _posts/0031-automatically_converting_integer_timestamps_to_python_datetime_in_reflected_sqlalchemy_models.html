@@ -1,0 +1,81 @@
+---
+categories: code, python, slurm, sqlalchemy
+date: 2011/09/01 18:21:17
+permalink: http://threebean.org/blog/2011/09/01/automatically-converting-integer-timestamps-to-python-datetime-in-reflected-sqlalchemy-models/
+tags: code, python, slurm, sqlalchemy
+title: Automatically converting integer timestamps to python datetime in reflected
+  SQLAlchemy models
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/09/01/automatically-converting-integer-timestamps-to-python-datetime-in-reflected-sqlalchemy-models/'>http://threebean.wordpress.com/2011/09/01/automatically-converting-integer-timestamps-to-python-datetime-in-reflected-sqlalchemy-models/</a>.</p>What a title...
+
+I'm working on <a href="http://pypi.python.org/pypi/slurchemy" target="_blank">slurchemy</a> and I have a legacy database with tons of tables (many are dynamically created by another app).  Each table has a few '*_time' fields that are stored as Integers.  A quick google showed me how to reflect SQLAlchemy models from the prexisting database, but getting the '*_time' columns to play out in python as datetime objects (and not as `long`s) was a real nuisance.
+
+I first tried to use the event framework like so:
+
+[sourcecode language="python"]
+from sqlalchemy import types
+from sqlalchemy import event
+
+def listen_for_reflect(table, column_info):
+    if 'time' in column_info['name']:
+        column_info['type'] = types.DateTime()
+
+event.listen(Table, 'column_reflect', listen_for_reflect)
+[/sourcecode]
+
+This worked insofar as the Table's column type was really changed to a <code>sqlalchemy.types.DateTime</code> object in every case I wanted it to.  But once a <code>sqlalchemy.orm.mapper</code> was applied, my changes weren't <i>reflected</i>, so to speak.
+
+I banged my head against the sqlalchemy codebase and couldn't make anything really elegant happen.  Here's what I settled with:
+
+[sourcecode language="python"]
+import datetime
+import time
+
+from sqlalchemy import MetaData, Table
+from sqlalchemy.orm import scoped_session, class_mapper
+
+def add_datetime_properties(cls):
+    """ For every property of a class that contains '_time', add a
+    corresponding '_datetime' property that converts to and from seconds 
+    since the epoch.
+
+    Author:  Ralph Bean &lt;ralph.bean@gmail.com&gt;
+
+    Use like::
+        &gt;&gt;&gt; DBSession = scoped_session(maker)
+        &gt;&gt;&gt; DBSession.configure(bind=engine)
+        &gt;&gt;&gt; metadata = MetaData(engine.url)
+        &gt;&gt;&gt; table = Table('thing_table', metadata, autoload=True)
+
+        &gt;&gt;&gt; class Thing(object):
+        ...     pass
+        &gt;&gt;&gt; mapper(Thing, table)
+
+        &gt;&gt;&gt; add_datetime_properties(Thing)
+
+        &gt;&gt;&gt; t = DBSession.query(Thing).first()
+        &gt;&gt;&gt; print t.create_time
+        ... 1314900554
+        &gt;&gt;&gt; print t.create_datetime
+        ... 2011-09-01 14:09:14
+    """
+
+    for prop in class_mapper(cls).iterate_properties:
+        if '_time' not in prop.key:
+            continue  # Fugheddaboudit
+
+        key = prop.key
+
+        def getx(self):
+            return datetime.datetime.fromtimestamp(
+                float(getattr(self, key)))
+
+        def setx(self, x):
+            setattr(self, key, time.mktime(x.timetuple()))
+
+        datetime_key = key.replace('_time', '_datetime')
+
+        setattr(cls, datetime_key, property(getx, setx))
+[/sourcecode]
+
+And it worked!

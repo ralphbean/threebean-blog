@@ -1,0 +1,61 @@
+---
+categories: code, fabric, moksha, python
+date: 2011/04/13 19:39:51
+permalink: http://threebean.org/blog/2011/04/13/using-fabric-to-manage-moksha-development/
+tags: code, fabric, moksha, python
+title: Using fabric to manage moksha development
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/04/13/using-fabric-to-manage-moksha-development/'>http://threebean.wordpress.com/2011/04/13/using-fabric-to-manage-moksha-development/</a>.</p>
+<p><a href="https://fedorahosted.org/moksha/"><img alt="" class="alignright
+  size-full wp-image-203" height="139"
+  src="http://threebean.files.wordpress.com/2011/04/moksha.png" title="moksha"
+  width="198" /></a></p>
+
+<p>Now I know that <a href="http://docs.fabfile.org/">fabric</a> is really meant for managing <em>deployment</em>, but to try and teach myself what it can do, I rewrote some <a href="https://github.com/ralphbean/moksha/blob/dev/start-moksha">monster bash-scripts</a> that manage the development environment for <a href="http://lewk.org">Luke Macken</a>'s awesome project <a href="https://fedorahosted.org/moksha/">moksha</a>.</p>
+
+<p>I came up with:
+<ul>
+<li>A <a href="https://github.com/ralphbean/moksha/blob/fabric/moksha/fabric/core/fab.py">master fabfile</a> to manage moksha-proper development.</li>
+<li>A <a href="https://github.com/ralphbean/moksha/blob/fabric/moksha/templates/moksha/master/moksha/fabric/+package+/fab.py_tmpl">template fabfile</a> that gets placed in the base directory of new apps created from moksha's paster templates.</li>
+</ul>
+</p>
+
+Here's an example of how to use them to start up a new moksha app.
+
+$$code(lang=bash, style=monokai)
+#!/bin/bash
+
+rm -rf threebean
+mkdir -p threebean
+pushd threebean
+
+git clone git://github.com/ralphbean/moksha.git
+pushd moksha
+fab -H localhost bootstrap
+popd
+
+# If you don't already have it sourced in your .bashrc!
+source /usr/bin/virtualenvwrapper.sh
+
+workon moksha
+paster moksha -l -c -u -C -P &lt;&lt; EOF
+testapp
+moksha.test
+EOF
+deactivate
+
+pushd testapp
+fab -H localhost install
+popd
+
+
+pushd moksha
+fab -H localhost develop
+fab -H localhost start
+popd
+
+popd
+
+# You should see the testapp widget show up under the 'widgets' menu.
+firefox http://localhost:8080/ &amp;
+$$/code

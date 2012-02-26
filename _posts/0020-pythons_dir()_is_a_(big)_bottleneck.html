@@ -1,0 +1,36 @@
+---
+categories: code, oops, python
+date: 2011/04/29 14:22:23
+permalink: http://threebean.org/blog/2011/04/29/pythons-dir-is-a-big-bottleneck/
+tags: code, oops, python
+title: python's dir() is a (big) bottleneck
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/04/29/pythons-dir-is-a-big-bottleneck/'>http://threebean.wordpress.com/2011/04/29/pythons-dir-is-a-big-bottleneck/</a>.</p>
+<p>Wrote this up due to <a
+  href="https://bitbucket.org/ralphbean/tw2core/changeset/62f22632b61b"
+  target="_blank">this commit</a> to tw2.core.</p>
+
+<p>(<strong><em>EDIT:</em></strong> Thanks to <a href="http://lewk.org"
+  target="_blank">lmacken</a> for the tip on <code>iteritems()</code>.)</p>
+
+$$code(lang=python, style=monokai)
+#!/usr/bin/env python
+""" Experiment showing that :func:`dir` is a bottleneck.
+
+Expected output:
+    1.384130 [getattr(obj, k) for k in dir(obj)]
+    0.343161 [v for k, v in obj.__dict__.items()]
+    0.278336 [v for k, v in obj.__dict__.iteritems()]
+"""
+
+from timeit import Timer
+
+statements = [
+    "[getattr(obj, k) for k in dir(obj)]",
+    "[v for k, v in obj.__dict__.items()]",
+    "[v for k, v in obj.__dict__.iteritems()]",
+]
+
+for stmt in statements:
+    print "%.6f" % Timer(stmt, "import os as obj").timeit(10000), stmt
+$$/code

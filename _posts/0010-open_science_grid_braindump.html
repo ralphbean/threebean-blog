@@ -1,0 +1,70 @@
+---
+categories: grid
+date: 2011/03/10 19:29:54
+permalink: http://threebean.org/blog/2011/03/10/open-science-grid-braindump/
+tags: grid
+title: Open Science Grid Braindump
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/03/10/open-science-grid-braindump/'>http://threebean.wordpress.com/2011/03/10/open-science-grid-braindump/</a>.</p>
+<p><a href="http://threebean.files.wordpress.com/2011/03/template_02.gif"><img
+  alt="" class="alignright size-full wp-image-164" height="81"
+  src="http://threebean.files.wordpress.com/2011/03/template_02.gif"
+  title="template_02" width="174" /></a></p>
+
+<p>I spent Monday through Thursday of this week at the <a
+  href="http://www.opensciencegrid.org/">Open Science Grid (OSG)</a> all-hands
+meeting in Boston, MA.  Work sent me to get me up to speed on what's going
+on.</p>
+
+<p>The OSG is cool.  It is a national, distributed computing grid for
+data-intensive research that is really bent on an open approach to
+high-throughput computing.  On average, it serves <a
+  href="http://display.grid.iu.edu/">1.2 million cpu-hours of computation per
+  day</a>.</p>
+
+<p>Unlike <a href="http://www.ncsa.illinois.edu/BlueWaters/">Blue Waters</a>
+(which you can't get onto) and unlike the <a
+  href="https://www.teragrid.org/">TeraGrid</a> (which requires you apply for
+and wait for allocations), the OSG makes it simple for you to run as much
+research code as you need to.  The whole project appears to be really driven by
+the <a href="http://public.web.cern.ch/public/en/lhc/CMS-en.html"> Compact Muon
+  Solenoid (CMS)</a> and the <a
+  href="http://public.web.cern.ch/public/en/lhc/ATLAS-en.html">A Toroidal LHC
+  ApparatuS (ATLAS)</a> experiments from the LHC.  There are a ton of different
+disciplines computing on the OSG, but CMS and ATLAS dominate the usage.</p>
+
+<p>The OSG is really complex and the conference was total <a
+  href="http://www.isgtw.org/content/glossary">acronym overload</a> but here are
+the two coolest things:</p>
+
+<p><strong>1.  XRootD</strong>-- Think 'the bittorrent of file systems'.  <a
+  href="http://xrootd.slac.stanford.edu/">XRootD</a> is a real necessity for the
+CMS and ATLAS projects that need to move tremendous amounts of data very
+quickly.</p>
+
+<p>Before XRootD, compute submissions to the OSG would have to have their jobs
+directed only to sites where the data was known to already exist <em>or</em>
+users would have to copy the data there directly (with
+<code>globus-copy-url</code> or something equivalent).</p>
+
+<p>With XRootD, a running job simply asks for a file and and the local
+redirector asks its peers, who ask their peers until <strong>all</strong> the
+instances that have the file respond and simultaneously feed the data to the
+requester.  It scales linearly!</p>
+
+<p><strong>2.  Cloud Computing(!)</strong>-- A couple different projects are
+going on to introduce 'dynamic, on-demand cloud infrastructures'.  The team at
+<a href="http://www.clemson.edu/">Clemson</a> is building a piece of software
+called <a href="http://portal.acm.org/citation.cfm?id=1646479">kestrel</a> that
+submits a number of 'pilot' jobs to condor that then spin up each of their own
+VMs and phone home for more work.  Argonne Labs and the NERSC Magellan team have
+had some luck <a
+  href="http://www.isgtw.org/feature/feature-magellan-explores-scientific-clouds-scientifically">running
+  super-physics software in a different by similar setup.</a></p>
+
+<p><strong>Heading home</strong>, I've got a lot of new ideas and things to try
+and play with.  Connecting our resources to the OSG seems a priority, but first
+we'll need to write a <a href="http://dev.globus.org/wiki/GRAM">GRAM</a> plugin
+for the <a href="http://www.globus.org/toolkit/">Globus Toolkit</a> to add <a
+  href="https://computing.llnl.gov/linux/slurm/">SLURM</a> support (<em>acronym
+  overload</em>, right?).</p>

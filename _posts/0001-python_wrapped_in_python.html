@@ -1,0 +1,90 @@
+---
+categories: code, python, trypy
+date: 2009/08/03 13:50:42
+permalink: http://threebean.org/blog/2009/08/03/python-wrapped-in-python/
+tags: code, python, trypy
+title: Python wrapped in python
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2009/08/03/python-wrapped-in-python/'>http://threebean.wordpress.com/2009/08/03/python-wrapped-in-python/</a>.</p>
+<p><em><strong>EDIT 04-26-2011</strong></em>:  Check out <a
+  href="http://learnpython.org">http://learnpython.org</a>!</p>
+
+<p>So I started a little <a href="http://python.org/" target="_blank">python</a>
+project called <a href="http://code.google.com/p/trypy"
+  target="_blank">trypy</a> the other day.  Its a <a
+  href="http://turbogears.org/2.0/" target="_blank" title="TurboGears
+  2">TurboGears 2</a> app in development inspired by the <a
+  href="http://tryruby.hobix.com" target="_blank">tryruby</a> app written by <a
+  href="http://whytheluckystiff.net" target="_blank">Why the Lucky Stiff</a>.
+At the core, I need to be able to interpret python commands in an already
+running python program.  Having learned of the <a
+  href="http://pexpect.sourceforge.net/pexpect.html" target="_blank">pexpect</a>
+module, here's what I came up with.<p>
+
+$$code(lang=python, style=monokai)
+
+import pexpect
+
+class PythonInterpreter(object):
+    def __init__(self, forbidden=[], quiet=True):
+        self.forbidden = forbidden
+        self.eof = False
+        self.lastline = None
+        self.py = pexpect.spawn('python')
+        self.eoc = "# __end_of_command__"
+        if quiet:
+            # Chew the first three 'version' lines
+            [self.readline() for i in range(3)]
+        self.cmd_history = [
+                'print "Happy python interpreter reporting for duty."']
+
+    def readline(self):
+        self.lastline = self.py.readline().rstrip()
+        return self.lastline
+
+    def prompt(self):
+        if self.eoc in self.lastline:
+            i = self.lastline.index(self.eoc)
+            return self.lastline[:i]
+        return "&gt;&gt;&gt;"
+
+    def command(self, index):
+        return self.cmd_history[index]
+
+    def process(self, cmd):
+        lines = []
+        self.cmd_history.append(cmd)
+        if self.eof:
+            lines.append('** PythonInterpreter:  EOF')
+        try:
+            if any([item in cmd for item in self.forbidden]):
+                return ['    "%s"' % cmd, '  Disallowed.  Sorry.']
+            self.py.sendline(cmd + "\n" + self.eoc)
+            garbage, line = self.readline(), self.readline()
+            while self.eoc not in line:
+                lines.append(line)
+                line = self.readline()
+        except Exception, e:
+            lines.append( '** PythonInterpreter:  There was an error.' )
+            self.eof = True
+        return lines
+
+$$/code
+
+It could be run with a little piece like:
+
+$$code(lang=python, style=monokai)
+
+if __name__ == '__main__':
+    interp = PythonInterpreter(forbidden=['import'])
+    while not interp.eof:
+        cmd = raw_input(interp.prompt())
+        lines = interp.process(cmd)
+        for line in lines:
+            print line
+    print " Goodbye."
+
+$$/code
+
+<p>Hope you enjoy.  More on <a href="http://code.google.com/p/trypy"
+  target="_blank">trypy</a> soon.</p>

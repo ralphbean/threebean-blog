@@ -1,0 +1,75 @@
+---
+categories: code, python
+date: 2011/06/08 19:26:30
+permalink: http://threebean.org/blog/2011/06/08/cached-function-calls-with-expiration-in-python-with-shelve-and-decorator/
+tags: code, python
+title: Cached function calls with expiration in python with shelve and decorator
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/06/08/cached-function-calls-with-expiration-in-python-with-shelve-and-decorator/'>http://threebean.wordpress.com/2011/06/08/cached-function-calls-with-expiration-in-python-with-shelve-and-decorator/</a>.</p>Cacheing with decorators is nice.  Sometimes you don't want to use something super heavyweight, but just a little something you rolled on your own.
+
+[sourcecode language="python"]
+import time
+import random
+
+@scached(cache_file='shelvecache.db', expiry=datetime.timedelta(seconds=5))
+def f1(foo, bar='baz'):
+    """ Example of using the cache decorator """
+
+    print " ** starting in f1.. sleepy time"
+    time.sleep(5)
+    # The result of all my hard work
+    result = random.random()
+    print " ** woke up with", result
+    return result
+
+if __name__ == '__main__':
+    print f1('hai') # slow
+    print f1('hai') # fast
+    print f1(foo='hai') # fast
+
+    print "okay.. sleeping on the outside"
+    time.sleep(5)
+
+    print f1('hai') # slow again
+    print f1('hai') # fast again
+[/sourcecode]
+
+Here's the code that provides the @scached decorator.
+
+[sourcecode language="python"]
+import datetime
+import decorator
+import shelve
+from hashlib import md5
+
+def scached(cache_file, expiry):
+    """ Decorator setup """
+
+    def scached_closure(func, *args, **kw):
+        """ The actual decorator """
+        key = md5(':'.join([func.__name__, str(args), str(kw)])).hexdigest()
+        d = shelve.open(cache_file)
+
+        # Expire old data if we have to
+        if key in d:
+            if d[key]['expires_on'] &lt; datetime.datetime.now():
+                del d[key]
+
+        # Get new data if we have to
+        if key not in d:
+            data = func(*args, **kw)
+            d[key] = {
+                'expires_on' : datetime.datetime.now() + expiry,
+                'data': data,
+            }
+
+        # Return what we got
+        result = d[key]['data']
+        d.close()
+
+        return result
+
+    return decorator.decorator(scached_closure)
+[/sourcecode]
+
+For extra cool points, combine the above with my post on <a href="http://threebean.wordpress.com/2011/06/06/context-manager-for-python-shelve-module/">shelve and context managers</a>.

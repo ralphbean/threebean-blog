@@ -1,0 +1,102 @@
+---
+categories: code, jit, pyramid, python
+date: 2011/03/07 20:51:04
+permalink: http://threebean.org/blog/2011/03/07/sqlaradialgraph-in-a-pyramid-app/
+tags: code, jit, pyramid, python
+title: SQLARadialGraph in a Pyramid app
+---
+<p>Originally posted at <a href='http://threebean.wordpress.com/2011/03/07/sqlaradialgraph-in-a-pyramid-app/'>http://threebean.wordpress.com/2011/03/07/sqlaradialgraph-in-a-pyramid-app/</a>.</p>
+<p><code>tw2.jit.SQLARadialGraph</code> is a python class that encapsulates the
+awesome <code>RGraph</code> widget from the <a
+  href="http://thejit.org/">Javascript InfoVis Toolkit</a> and automatically
+sets it up with JSON data from a sqlalchemy-mapped database.  This post is a
+tutorial on how to make use of it in an application built on the Pyramid web
+framework.</p>
+
+<p><strong>1.  Create</strong> a fresh pyramid app from the
+<code>pyramid_alchemy</code> paster template (<a
+  href="http://threebean.wordpress.com/2011/03/06/quickstarting-a-pyramid-app/">instructions</a>).</p>
+
+<p><strong>2.  Create</strong> some <code>sqlalchemy</code> models with
+one-to-many and/or many-to-many relationships and populate the DB along the
+lines described in my <a
+  href="http://threebean.wordpress.com/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/"><code>SQLARadialGraph</code>
+  in a Turbogears 2.1 app</a> tutorial.</p>
+
+<p><strong>3.  Include</strong> <code>tw2.jit</code> and <code>formencode</code>
+in the <code>requires</code> list in your <code>setup.py</code> file and re-run
+<code>python setup.py develop</code> with your virtualenv active.</p>
+
+<p><strong>4.  Include</strong> the Toscawidgets 2 middleware in the Pyramid
+WSGI stack by specifying <code>egg:tw2.core#middleware</code> just before your
+application's line in the <code>pipeline</code> setting inside
+<code>development.ini</code>.</p>
+
+<p><strong>5.  Create</strong> a module <code>&lt;project&gt;/widgets.py</code>
+with the following contents:</p>
+
+$$code(lang=python, style=monokai)
+from tw2jitpyramiddemo import models
+from tw2.jit import SQLARadialGraph
+
+class UserGraph(SQLARadialGraph):
+    id = 'whatever'
+    base_url = '/jit_data'
+    entities = [models.MyModel, models.MyGroup]
+    width = '750'
+    height = '533'
+$$/code
+
+<p><strong>6.  Expose</strong> the <code>UserGraph</code> widget in one of your
+views.</p>
+
+<p>Specifically, modify <code>&lt;project&gt;/views.py</code> and change the
+<code>view_model(context, request)</code> view to look something like:</p>
+
+$$code(lang=python, style=monokai)
+from widgets import UserGraph
+
+def view_model(context, request):
+    return {'item':context, 'project':'tw2.jit-pyramid-demo',
+            'jitwidget':UserGraph(rootObject=context)}
+$$/code
+
+<p><strong>7.  Render</strong> the widget in the corresponding template.</p>
+
+<p>If you're using Chameleon templates
+(<code>&lt;project&gt;/templates/model.pt</code>) this looks like:</p>
+<blockquote>
+&lt;div tal:content="structure jitwidget.display()"&gt;&lt;/div&gt;
+</blockquote>
+
+<p>If you're using Mako templates
+(<code>&lt;project&gt;/templates/model.mak</code>) this looks like:</p>
+<blockquote>
+${jitwidget.display() | n}
+</blockquote>
+
+<p><strong>8.  Open</strong> a route to the widget's own controller.</p>
+
+<p>Add the following three lines to <code>&lt;project&gt;/__init__.py</code>
+just before the <code>return config.make_wsgi_app()</code> line:</p>
+
+$$code(lang=python, style=monokai)
+from widgets import UserGraph
+jit_view = lambda c, r : UserGraph.request(r)
+config.add_route('jit_data', '/jit_data', view=jit_view, xhr=True)
+$$/code
+
+<p>And we're done.  Restart the app and checkout <a
+  href="http://localhost:6543/1">http://localhost:6543/1</a> and it
+<em>might</em> look something like this.</p>
+
+[caption id="attachment_142" align="aligncenter" width="300" caption="tw2.jit.SQLARadialGraph in the default pyramid_alchemy app"]<a href="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png"><img alt="tw2.jit.SQLARadialGraph in the default pyramid_alchemy app" class="size-medium wp-image-142" height="180" src="http://threebean.files.wordpress.com/2011/03/screenshot-pyramid.png?w=300" title="screenshot-pyramid" width="300" /></a>[/caption]
+
+<p>You can, of course, tweak all kinds of style and functional parameters on
+<code>SQLARadialGraph</code> like those outlined near the end of my post on
+using <a
+  href="http://threebean.wordpress.com/2011/03/06/sqlalchemy-the-javascript-infovis-toolkit-jit/"><code>SQLARadialGraph</code>
+  in a Turbogears 2.1 app</a>.</p>
+
+<p>Maybe you disagree, but the Pyramid implementation above went <em>much more
+  smoothly</em> than the TG 2.1 setup.  I think I like it.</p>
