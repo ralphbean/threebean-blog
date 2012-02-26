@@ -49,3 +49,7 @@ blog.name = "[three]Bean"
 
 ## blog_timezone -- the timezone that you normally write your blog posts from
 blog.timezone = "US/Eastern"
+
+blog.post_default_filters = {
+    "rst": "rst, rst_syntax_highlight"
+}

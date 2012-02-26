@@ -1,5 +1,5 @@
 ---
-categories: misc, blogofile
+categories: python, blogofile
 date: 2012/02/14 15:00:00
 permalink: http://threebean.org/blog/first-post
 title: Migrating from wordpress
@@ -25,3 +25,98 @@ So I'm trying out `blogofile <http://blogofile.com/>`_:
    elsewhere.
  - I can keep my posts in git.
  - I can host everything in one place on http://threebean.org
+
+Along the way, I picked up this `handy hack
+<http://techspot.zzzeek.org/2010/12/06/my-blogofile-hacks/>`_ from zzzeek on
+getting syntax highlighting working in reST posts.
+
+I also had to script something up with ``lxml`` to parse my exported
+WordPress blog's and reimport it to blogofile.  Here's what I wrote (It's
+based heavily on `this example
+<https://raw.github.com/EnigmaCurry/blogofile/master/converters/wordpress2blogofile.py>`_
+from the blogofile github repo::
+
+    #!python
+    #!/usr/bin/env python
+    """ WordPress (xml) -> blogofile.
+
+    Picks up an exported WordPress.com blog in XML format and builds a blogofile
+    ``_posts`` directory out of it.
+    """
+
+    import codecs
+    import feedparser
+    import os
+    import re
+    import yaml
+
+
+    def get_published_posts(filename):
+        """ Generator over the posts in a wordpress.com XML dump. """
+
+        d = feedparser.parse('test.xml')
+
+        for entry in d['entries']:
+            if entry.get('wp_attachment_url', None):
+                pass
+            elif entry.get('title', None) == 'About':
+                pass
+            else:
+                yield entry
+
+
+    if __name__ == '__main__':
+        #Output textile files in ./_posts
+        if os.path.isdir("_posts"):
+            print "There's already a _posts directory here, "\
+                    "I'm not going to overwrite it."
+            sys.exit(1)
+        else:
+            os.mkdir("_posts")
+
+        old_prefix = "http://threebean.wordpress.com/"
+        new_prefix = "http://threebean.org/blog/"
+        prepend_links = True
+
+        post_num = 1
+        for post in get_published_posts('test.xml'):
+            yaml_data = {
+                "title": post['title'],
+                "date": post['wp_post_date'].replace('-', '/'),
+                "permalink": post['link'].replace(old_prefix, new_prefix),
+                "categories": ", ".join([
+                    tag['term'].lower() for tag in post['tags']
+                ]),
+                "tags": ", ".join([
+                    tag['term'].lower() for tag in post['tags']
+                ]),
+                }
+            fn = u"{0}-{1}.html".format(
+                    str(post_num).zfill(4),
+                    re.sub(
+                        r'[/!:?\-,\']',
+                        '',
+                        post['title'].strip().lower().replace(' ', '_')
+                    )
+            )
+
+            content = post['content'][0]['value'].replace(u"\r\n", u"\n")
+
+            if prepend_links:
+                content = "<p>Originally posted at <a href='%s'>%s</a>.</p>" % (
+                    post['link'], post['link']) + content
+
+            print "writing " + fn
+            f = codecs.open(os.path.join("_posts", fn), "w", "utf-8")
+            f.write("---\n")
+            f.write(
+                yaml.safe_dump(
+                    yaml_data,
+                    default_flow_style=False,
+                    allow_unicode=True
+                ).decode("utf-8")
+            )
+            f.write("---\n")
+            f.write(content)
+            f.close()
+            post_num += 1
