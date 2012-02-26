@@ -16,7 +16,7 @@ and no active development.  20% of the page was a "news" bar on the right that
 pointed users to "Alpha releases" and "new documentation" for tw2, timestamped
 back in 2010!
 
-.. image:: static/images/old-tw2-frontpage.png
+.. image:: /blog/static/images/old-tw2-frontpage.png
    :scale: 50 %
    :align: right
 
@@ -24,6 +24,6 @@ I revamped it to more clearly differentiate between the two versions of the
 framework and to give it a more modern look (if we're building python widget
 libraries, we better be on top of CSS3 on our project page, right?)
 
-.. image:: static/images/new-tw2-frontpage.png
+.. image:: /blog/static/images/new-tw2-frontpage.png
    :scale: 50 %
    :align: right
