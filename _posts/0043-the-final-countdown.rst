@@ -35,12 +35,14 @@ We have:
     standardize on tw2
     <https://groups.google.com/forum/?fromgroups#!topic/turbogears/N1xh_r0Sjt4>`_.
   - been fielding a lot more support for tw2 in `Pyramid 1.3
-    <http://pypi.python.org/pypi/pyramid>_` both on the mailing list and in
+    <http://pypi.python.org/pypi/pyramid>`_ both on the mailing list and in
     ``#toscawidgets``.  There's a bug still lurking out there for
     `windows+tw2+pyramid users
     <https://bitbucket.org/paj/tw2core/issue/108/working-with-latest-pyramid-13>`_.
     At this point, if you can reproduce it and tell us about it, that would
     be helpful.
+  - got our first reports of people using tw2 with `bottle
+    <http://pypi.python.org/pypi/bottle>`_.  It worked!
 
 **Goal:** (solidly) close as many bugs as possible and push as many libraries
 from beta to release as we can.
