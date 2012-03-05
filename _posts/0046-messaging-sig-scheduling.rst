@@ -30,4 +30,4 @@ March 20th at the earliest.
 
 ----
 
-.. image:: static/images/0mq-enable-all-the-things.jpg
+.. image:: http://threebean.org/blog/static/images/0mq-enable-all-the-things.jpg
