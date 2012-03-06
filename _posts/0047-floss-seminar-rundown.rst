@@ -86,7 +86,7 @@ robot fighting game) wins the prize for `master hack
    pybotwar fork.
 
    - Those instances dump their state into mongodb (or memcached, long story).
-   - Their javascript client polls the TG2 app for the game state and `voila
+   - Their javascript client polls the TG2 app for the game state and `voilà
      <http://webbot-qalthos.rhcloud.com>`_.
 
 They have (awesome) plans to:
