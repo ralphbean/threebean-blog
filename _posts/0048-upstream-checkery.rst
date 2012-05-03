@@ -24,7 +24,7 @@ result.  Maybe you'll find it useful::
     """
     List the Fedora packages I own by their status in Upstream Release Monitoring.
 
-    Requires a few python modules::
+    Requires python-fedora::
 
         $ sudo yum install python-fedora
 
