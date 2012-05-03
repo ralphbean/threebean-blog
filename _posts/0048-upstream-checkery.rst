@@ -26,35 +26,32 @@ result.  Maybe you'll find it useful::
 
     Requires a few python modules::
 
-        $ sudo yum install python-fedora python-keyring python-vault
-
-    If you couldn't get python-vault, that's because it's not in F17 yet.  Try::
-
-        $ sudo pip install vault
+        $ sudo yum install python-fedora
 
     """
 
     import fedora.client
+    import os
     import urllib2
-    import vault
 
     URL = "http://fedoraproject.org/wiki/Upstream_release_monitoring"
 
     auth_system = 'Fedora Account System'
+
     symbols = {
         False: ' - ',
         True: ' + ',
     }
 
     if __name__ == '__main__':
-        username = vault.get(auth_system, 'username')
-        password = vault.get(auth_system, 'password')
+        pkgdb = fedora.client.PackageDB()
 
-        pkgdb = fedora.client.PackageDB(username=username, password=password)
+        username = os.environ.get("BODHI_USER")
+        print "* Packages for FAS user %r" % username
+
         pkgs = pkgdb.user_packages(username).pkgs
 
         page = urllib2.urlopen(URL).read()
 
         for pkg in pkgs:
             print symbols[pkg.name in page], pkg.name
-
