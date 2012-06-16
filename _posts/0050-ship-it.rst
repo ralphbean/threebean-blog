@@ -1,5 +1,5 @@
 ---
-categories: fedora
+categories: fedora, python
 date: 2012/06/15 18:00:00
 permalink: http://threebean.org/blog/ship-it
 title: Ship It!
