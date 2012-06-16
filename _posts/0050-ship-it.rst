@@ -34,8 +34,7 @@ kind of thing::
 
     $ echo "le sigh"
 
-I had to do this for the `whole python-tw2 stack <http://bit.ly/KA3vJ3>`_; it was
-`unbearable <http://bit.ly/muOfzi>`_ I tell you!
+I had to do this for the `whole python-tw2 stack <http://bit.ly/KA3vJ3>`_!
 
 In answer, I wrote a baby scriptlet called `ship-it <bit.ly/LqQ8Yi>`_ to smooth it over.
 It uses the unbelievably re__dict__ulous `pbs
