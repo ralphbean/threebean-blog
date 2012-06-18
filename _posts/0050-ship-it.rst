@@ -95,7 +95,7 @@ soon to a Beefy Miracle near you as `python-pbs-subprocess
 
         args = parser.parse_args()
 
-        required_args = ['user', 'type', 'bugs', 'notes']
+        required_args = ['user', 'type', 'notes']
         for required in required_args:
             if not getattr(args, required):
                 parser.print_usage()
