@@ -1,5 +1,5 @@
 ---
-categories: python testing toscawidgets turbogears
+categories: python, testing, toscawidgets, turbogears
 date: 2012/06/22 18:00:00
 permalink: http://threebean.org/blog/sieve
 title: In which I avoid the inverse unicode sandwich
