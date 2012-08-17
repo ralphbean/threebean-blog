@@ -1,5 +1,5 @@
 ---
-categories: python fedora
+categories: python, fedora
 date: 2012/08/17 11:00:00
 permalink: http://threebean.org/blog/atexit-for-threads
 title: atexit for threads
