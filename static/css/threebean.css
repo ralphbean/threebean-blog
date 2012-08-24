@@ -17,6 +17,9 @@ p {
 div#content {
         width: 960px;
 }
+div.post_prose {
+    margin-left: 25px;
+}
 hr.interblog {
         margin-top: 10px;
         margin-bottom: 10px;
@@ -56,6 +59,9 @@ a:hover {
         margin-top: -125px;
         margin-left: -350px;
         font-size:250%;
+}
+h1 {
+    font-size: 90%;
 }
 .menu {
         font-size: 125%;
