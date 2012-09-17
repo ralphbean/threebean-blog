@@ -1,6 +1,6 @@
 ---
 categories: fedora, python, pyramid, moksha
-date: 2012/09/17 16:30:00
+date: 2012/09/17 14:30:00
 permalink: http://threebean.org/blog/moksha-pyramid-user-activity
 title: Moksha Tutorial - Live Graph of User Activity
 ---
