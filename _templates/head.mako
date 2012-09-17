@@ -6,7 +6,7 @@ href="${bf.util.site_path_helper(bf.config.blog.path,'/feed/atom')}" />
 <link rel='stylesheet' href='/blog/static/css/pygments_murphy.css' tyupe='text/css' />
 <link rel='stylesheet' href='/blog/static/css/pygments_monokai.css' tyupe='text/css' />
 <style>
-h1 {
+h1.logo {
         padding:20px;
         font-size: 320%;
 }

@@ -61,7 +61,11 @@ a:hover {
         font-size:250%;
 }
 h1 {
-    font-size: 90%;
+    font-size: 150%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: -10px;
+
 }
 .menu {
         font-size: 125%;
@@ -80,4 +84,28 @@ h1 {
         position: fixed;
         top: 50%;
         left: 50%;
+}
+
+.note, .warning {
+    background-color: #E0E0E0;
+    margin-left: 40px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    padding-left: 2px;
+    padding-top: 0.1pt;
+    padding-bottom: 0.1pt;
+}
+
+.admonition-title {
+    font-size: 120%;
+    margin-bottom: -9px;
+    text-decoration: underline;
+}
+
+.literal {
+    background-color: rgb(247, 247, 249);
+    border: 1px solid rgb(225, 225, 232);
+    font-family: Monospace;
+    padding: 2px;
 }
