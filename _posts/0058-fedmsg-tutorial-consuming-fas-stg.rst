@@ -1,7 +1,7 @@
 ---
 categories: fedora, fedmsg
 date: 2012/09/22 13:30:00
-permalink: http://threebean.org/fedmsg-tutorial-consuming-fas-stg
+permalink: http://threebean.org/blog/fedmsg-tutorial-consuming-fas-stg
 title: Tutorial - locally consuming messages from the staging FAS
 ---
 
