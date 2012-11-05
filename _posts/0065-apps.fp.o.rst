@@ -1,0 +1,22 @@
+---
+categories: fedora
+date: 2012/11/05 13:30:00
+permalink: http://threebean.org/blog/apps.fp.o
+title: apps.fp.o
+---
+
+I made a landing page for the previously barren
+https://apps.fedoraproject.org/ (*however*,
+it's `up only in our staging environment
+<https://apps.stg.fedoraproject.org/>`_ until after the freeze).
+
+.. image:: http://threebean.org/apps.fp.o.png
+   :width: 600px
+
+It's built using the `Javascript Infovis Toolkit <http://thejit.org>`_.  The
+data model is kept in a nice little YAML file so we can easily update it from
+puppet.
+
+If you want to toy with it, the source can be found `on github
+<http://github.com/ralphbean/apps.fp.o>`_.
+
