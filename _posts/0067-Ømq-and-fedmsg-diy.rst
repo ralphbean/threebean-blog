@@ -1,6 +1,6 @@
 ---
 categories: python, fedora, fedmsg, zeromq
-date: 2012/11/16 01:00:00
+date: 2012/11/16 16:00:00
 permalink: http://threebean.org/blog/zeromq-and-fedmsg-diy
 title: Ømq and fedmsg DIY
 ---
