@@ -1,0 +1,29 @@
+---
+categories: fedora, fedmsg, datanommer, gource
+date: 2012/11/26 08:00:00
+permalink: http://threebean.org/blog/datanommer-and-gource
+title: Datanommer and Gource
+---
+
+<p><em><strong>Crazy idea</strong>:  Take some data and mangle it
+into a git log.  Run gource on that git log.</em></p>
+
+<p>You may have seen <a href="http://threebean.org/blog/datanommer-and-fedmsg-activity/">
+a previous post of mine</a> on <a href="http://github.com/ralphbean/datanommer">
+datanommer</a>.  Well, it's been running for almost two months now.  I took the
+output of <code>datanommer-dump</code> and wrote <a
+href="https://github.com/ralphbean/datanommer/blob/develop/tools/gource/datanommer2gitlog.py">
+a script</a> to transform it into a fake git log.  The purpose?  To run <a
+href="http://code.google.com/p/gource/">gource</a> on it:</p>
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer"
+src="http://ralph.fedorapeople.org/so-i-turned-the-fedmsg-data-into-a-git-log-and.webm">
+</video></p>
+
+<p>It's like the "Fedora Movie".  Just to be
+clear, the visualization is not of the development of fedmsg itself, but of
+Fedora in general.  You can see wiki edits, IRC meetings, updates to packages,
+etc..  Can you find yourself in there?</p>
+
+<p>I used <a href="http://gravatar.com">gravatar.com</a> to grab the avatar
+images, using <code>FAS_USERNAME@fedoraproject.org</code>.</p>
