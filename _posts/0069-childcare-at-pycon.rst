@@ -12,7 +12,7 @@ at PyCon 2012.  She could only stop in to say "Hi" and couldn't participate
 though; she was caring for an infant at the time. (Her husband did get to
 participate).
 
-Since, the sprints are where you can build real relationships with
+Since the sprints are where you can build real relationships with
 upstream(s), develop skills, become inspired, have an impact, find a
 role model, be a role model, etc.. I thought it would be good for the conference
 (or some sponsors) to provide quality, on-site childcare at the sprints.  I wrote
@@ -20,6 +20,7 @@ to `pycon-organizers <http://mail.python.org/mailman/listinfo/pycon-organizers>`
 and stuff seems to be moving ahead.  `@jessenoller
 <https://twitter.com/jessenoller>`_ tweeted::
 
-    PyCon US 2013 Survey: 'Would You Use Subsidized Childcare at PyCon?' http://bit.ly/V0g5jf
+    PyCon US 2013 Survey: 'Would You Use Subsidized Childcare at PyCon?'
+    http://bit.ly/V0g5jf
 
-Nice!
+`A survey <http://bit.ly/V0g5jf>`_.  Nice!
