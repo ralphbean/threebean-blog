@@ -1,8 +1,8 @@
 ---
-categories: fedora, fedmsg, identica, twitter
+categories: fedora, fedmsg, identi.ca, twitter
 date: 2012/12/08 12:00:00
 permalink: http://threebean.org/blog/fedmsg-on-identica
-title: Fedmsg Stream Now Available on Identica
+title: Fedmsg Stream Now Available on identi.ca
 ---
 
 I just finished setting up a fedmsg bot to post updates to `identi.ca
