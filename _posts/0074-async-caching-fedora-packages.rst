@@ -107,10 +107,10 @@ With dogpile.cache now behaving magically and the Fedora Packages webapp patched
 to take advantage of it, I deployed a new release to staging the day before
 FUDCon and then again to production at FUDCon on Saturday, January 19th, 2013.
 At this point our memcached servers promptly `lost their minds
-<https://admin.fedoraproject.org/collectd/bin/graph.cgi?hostname=memcached04;plugin=memcached;type=memcached_connections;type_instance=current;begin=1357575000;end=1360250000>`_.
+<http://threebean.org/sad_memcached.png>`_.
 
-.. image::  https://admin.fedoraproject.org/collectd/bin/graph.cgi?hostname=memcached04;plugin=memcached;type=memcached_connections;type_instance=current;begin=1357575000;end=1360250000
-   :target: https://admin.fedoraproject.org/collectd/bin/graph.cgi?hostname=memcached04;plugin=memcached;type=memcached_connections;type_instance=current;begin=1357575000;end=1360250000
+.. image::  http://threebean.org/sad_memcached.png
+   :target: http://threebean.org/sad_memcached.png
 
 Mike Bayer `sagely warned
 <https://bitbucket.org/zzzeek/dogpile.core/pull-request/2/create-new-values-in-a-background-thread/diff#comment-75184>`_
