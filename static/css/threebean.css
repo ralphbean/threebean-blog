@@ -109,3 +109,16 @@ h1 {
     font-family: Monospace;
     padding: 2px;
 }
+
+.twitter-box {
+    display: none;
+    position: absolute;
+    right: 0px;
+    width: 300px;
+}
+
+@media all and (min-width: 1000px) {
+    .twitter-box {
+        display: block;
+    }
+}
