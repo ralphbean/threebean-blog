@@ -1,5 +1,5 @@
 ---
-categories: fedora
+categories: fedora, fedmsg
 date: 2012/08/23 16:30:00
 permalink: http://threebean.org/blog/this-week-in-fedora-apps
 title: This Week in Fedora Infrastructure Apps

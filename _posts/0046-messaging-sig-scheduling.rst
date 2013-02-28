@@ -1,5 +1,5 @@
 ---
-categories: fedora, zeromq, moksha
+categories: fedora, zeromq, moksha, fedmsg
 date: 2012/03/05 18:00:00
 permalink: http://threebean.org/blog/messaging-sig-scheduling
 title: Scheduling meetings for the Fedora Messaging SIG
