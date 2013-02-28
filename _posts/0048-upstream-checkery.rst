@@ -33,10 +33,9 @@ result.  Maybe you'll find it useful::
     import fedora.client
     import os
     import urllib2
+    from kitchen.text.converters import to_unicode
 
     URL = "http://fedoraproject.org/wiki/Upstream_release_monitoring"
-
-    auth_system = 'Fedora Account System'
 
     symbols = {
         False: ' - ',
@@ -51,7 +50,7 @@ result.  Maybe you'll find it useful::
 
         pkgs = pkgdb.user_packages(username).pkgs
 
-        page = urllib2.urlopen(URL).read()
+        page = to_unicode(urllib2.urlopen(URL).read())
 
         for pkg in pkgs:
             print symbols[pkg.name in page], pkg.name
