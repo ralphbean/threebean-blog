@@ -31,9 +31,10 @@ result.  Maybe you'll find it useful::
     """
 
     import fedora.client
-    import os
-    import urllib2
+    import requests
     from kitchen.text.converters import to_unicode
+
+    import os
 
     URL = "http://fedoraproject.org/wiki/Upstream_release_monitoring"
 
@@ -50,7 +51,9 @@ result.  Maybe you'll find it useful::
 
         pkgs = pkgdb.user_packages(username).pkgs
 
-        page = to_unicode(urllib2.urlopen(URL).read())
+        # Bypass varnish cache -> http://bit.ly/XF4YBy
+        headers = {'Cookie': 'this-is-not-a-cookie'}
+        page = requests.get(URL, headers=headers).text
 
         for pkg in pkgs:
             print symbols[pkg.name in page], pkg.name
