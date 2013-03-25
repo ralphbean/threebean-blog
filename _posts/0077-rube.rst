@@ -1,0 +1,35 @@
+---
+categories: fedora, selenium, rube, infrastructure
+date: 2013/03/25 15:00:00
+permalink: http://threebean.org/blog/rube
+title: Rube → Selenium tests for Fedora Infrastructure
+---
+
+Sometime last week, we updated all the packages in our `staging environment
+<http://infrastructure.fedoraproject.org/infra/docs/staging-infra.txt>`_.
+Our theory goes: we do it in staging first; if it works, then do it in
+production.  After executing that update, we let it sit for a few
+hours and then asked:  "Is everything working?"  Well, nothing fell
+down (that we could see).
+
+Since `fedmsg <http://fedmsg.com>`_ has come
+online, we know from watching the ``#fedora-fedmsg`` irc logs that
+practically noone uses the staging environment for anything.
+On a hunch, I went and tried to flex a few features of our webapps: a
+little of this, a little of that.  I tried logging into the wiki
+and **boom**:  a 500 error.
+
+So, that's a problem.
+
+In response, I wrote `Rube <https://github.com/fedora-infra/rube>`_ which uses
+`selenium <http://docs.seleniumhq.org/>`_ to open up Firefox and run ~30
+automated tests against our services in staging.  That's a good thing.  For
+you, it means the infrastructure team won't break stuff you use as often.
+For us, it means we can stress out less and spend more time making more
+awesome.
+
+Big thanks to `lmacken <http://github.com/lmacken>`_,
+`decause <https://github.com/decause/>`_ and
+`relrod <https://github.com/codeblock>`_ who contributed code and energy.
+It can still use more tests cases, so if you have one in mind please
+contribute!
