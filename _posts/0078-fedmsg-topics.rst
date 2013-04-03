@@ -1,8 +1,8 @@
 ---
 categories: fedora, fedmsg, python
-date: 2013/04/03 09:05:00
+date: 2013/04/03 09:15:00
 permalink: http://threebean.org/blog/fedmsg-topics
-title: Now Available:  List of fedmsg Topics
+title: Now Available - List of fedmsg Topics
 ---
 
 `fedmsg <http://fedmsg.com>`_ (the Fedora Infrastructure Message Bus) now has
