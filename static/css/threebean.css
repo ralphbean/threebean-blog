@@ -2,8 +2,9 @@
         margin: 0;
         target-new: tab ! important
 }
-div#main_block img {
-        width: 690px;
+h1.logo {
+        padding:20px;
+        font-size: 320%;
 }
 div.pygments_monokai {
         padding: 10px;
@@ -14,12 +15,30 @@ div.pygments_monokai {
 p {
         margin: 9px;
 }
+
+div#main_block img {
+        width: 690px;
+}
+
 div#content {
-        width: 700px;
+        width: 100%;
 }
-div.post_prose {
-    margin-left: 25px;
+
+@media all and (min-width: 1000px) {
+    div#content {
+            width: 700px;
+    }
 }
+
+@media all and (min-width: 700px) {
+    div.post_prose {
+        margin-left: 25px;
+    }
+    div.blog_post {
+        padding-left:60px;
+    }
+}
+
 hr.interblog {
         margin-top: 10px;
         margin-bottom: 10px;
