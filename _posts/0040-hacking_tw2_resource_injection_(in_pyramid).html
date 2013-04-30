@@ -7,7 +7,7 @@ title: Hacking tw2 resource injection (in pyramid)
 ---
 <p>In <code>#toscawidgets</code> this morning, <a
   href="https://twitter.com/#!/ekarlso">zykes-</a> was asking about how to do <a
-  href="http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/">the
+  href="http://threebean.org/blog/2011/12/13/hacking-tw2-resource-injection/">the
   jquery removal hack</a> I wrote about a month back but in Pyramid instead of
 TurboGears2.  First I'll summarize the problem, then show you our solution.</p>
 
@@ -36,7 +36,7 @@ even try.</p>
 <p>To get <code>tw2</code> to not do what you don't want, you need to
 <em>un-register</em> <code>tw2</code>'s jquery resource from the middleware
 yourself (on each request).  Previously we came up with a <a
-  href="http://threebean.wordpress.com/2011/12/13/hacking-tw2-resource-injection/">working
+  href="http://threebean.org/blog/2011/12/13/hacking-tw2-resource-injection/">working
   hack</a> that does this in the context of a TurboGears2 app.  Here's the same
 concept applied to a Pyramid app using a Pyramid "tween".</p>
 
