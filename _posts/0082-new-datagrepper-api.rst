@@ -5,7 +5,7 @@ permalink: http://threebean.org/blog/new-datagrepper-api
 title: Querying fedmsg history
 ---
 
-Yesterday, `Ian Weller <http://ianweller.org/>_` and I got the first
+Yesterday, `Ian Weller <http://ianweller.org/>`_ and I got the first
 iteration of "datagrepper" into production.  It is a JSON api that lets you
 query the history of the `fedmsg bus <http://fedmsg.com>`_.
 In case you're confused.. it is related to, but not the same thing as
