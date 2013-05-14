@@ -5,7 +5,7 @@ permalink: http://threebean.org/blog/new-fedora-tagger
 title: The New Fedora Tagger
 ---
 
-Last week the infrastructure team launched a new version of the `Fedora Tagger
+Last week the infrastructure team launched a new version of `Fedora Tagger
 <https://apps.fedoraproject.org/tagger/>`_.  It is a webapp that allows
 users to upvote/downvote tags on packages as well as rate packages themselves.
 The data ends up getting pulled into yum repo metadata by the bodhi masher
