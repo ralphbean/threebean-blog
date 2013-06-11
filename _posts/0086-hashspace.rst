@@ -49,7 +49,7 @@ fast enough?
 
 
     def demonstration(msg):
-        """ Handy printing utility to show the results """"
+        """ Handy printing utility to show the results """
 
         print "* Who takes this message? %r" % msg
         for consumer in consumers:
