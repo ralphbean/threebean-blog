@@ -5,12 +5,13 @@ permalink: http://threebean.org/blog/libravatar-psa
 title: Public Service Announcement -- Use Libravatar!
 ---
 
+**UPDATE** - updated the link at kparal's suggestion.
 
 tl;dr
 -----
 
 - I want you to sign up for libravatar (`click here
-  <https://www.libravatar.org/account/new/>`_).
+  <https://www.libravatar.org/openid/login/>`_).
 - Associate your ``FAS_USERNAME@fedoraproject.org`` email with it.
 - Upload a photo.. any photo.
 - Give yourself a high-five.
