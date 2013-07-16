@@ -63,7 +63,7 @@ apps we currently have in development.
 So, again:
 
 - Sign up for libravatar (`click here
-  <https://www.libravatar.org/account/new/>`_).
+  <https://www.libravatar.org/openid/login/>`_).
 - Associate your ``FAS_USERNAME@fedoraproject.org`` email with it.
 - Upload a photo.. any photo.
 - Give yourself a high-five.
