@@ -1,6 +1,6 @@
 ---
 categories: fedora, fedmsg, datagrepper, datanommer, pkgwat
-date: 2013/07/15 13:30:00
+date: 2013/07/16 00:30:00
 permalink: http://threebean.org/blog/pkgwat-history
 title: Querying all package history from the command line
 ---
