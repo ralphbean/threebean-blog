@@ -5,6 +5,7 @@
 h1.logo {
         padding:20px;
         font-size: 320%;
+        cursor: pointer;
 }
 div.pygments_monokai {
         padding: 10px;
