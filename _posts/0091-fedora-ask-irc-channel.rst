@@ -2,7 +2,7 @@
 categories: fedora, askfedora, askbot, fedmsg
 date: 2013/08/29 13:21:00
 permalink: http://threebean.org/blog/fedora-ask-irc-channel
-title: New #fedora-ask freenode channel (with a bot)
+title: New fedora-ask freenode channel (with a bot)
 ---
 
 If you're in to `Ask Fedora <https://ask.fedoraproject.org>`_, you may
