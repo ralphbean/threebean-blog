@@ -10,7 +10,7 @@ Engineering <https://fedoraproject.org/wiki/ReleaseEngineering>`_.  You can
 check it out `live on threebean.org
 <http://threebean.org/fedora-releng-dash/>`_.
 
-.. image:: static/images/fedora-releng-dash-screenshot-2013-08-30.png
+.. image:: http://threebean.org/blog/static/images/fedora-releng-dash-screenshot-2013-08-30.png
    :alt: Screenshot of an alpha dashboard for Release Engineering.
    :target: http://threebean.org/fedora-releng-dash/
 
