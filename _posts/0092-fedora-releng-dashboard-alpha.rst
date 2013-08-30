@@ -14,7 +14,7 @@ check it out `live on threebean.org
    :alt: Screenshot of an alpha dashboard for Release Engineering.
    :target: http://threebean.org/fedora-releng-dash/
 
-ight now all it does is try to show the status of the *compose* process which
+Right now all it does is try to show the status of the *compose* process which
 runs once a day for rawhide and the "branched" pre-release (that's F20 right
 now).  If any one of the components of that process (say, the pungify part) is
 happening right now, it'll tell you that and have it show up in yellow in stead
