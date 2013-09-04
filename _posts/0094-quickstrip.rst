@@ -50,3 +50,20 @@ Admission:  Pierre bullied me into blogging about this!
     25.7294211388
     import itertools; itertools.imap(str.strip, ['wat '] * 200)
     2.3925549984
+
+----
+
+**UPDATE (again)**: Comments further reveal that the update above is misleading
+-- the generators aren't actually doing any work there.  If we force them to
+spin out, we get results like these::
+
+    import itertools; set([s.strip() for s in ['wat '] * 200])
+    33.4951019287
+    import itertools; set((s.strip() for s in ['wat '] * 200))
+    35.5591659546
+    import itertools; set(map(str.strip, ['wat '] * 200))
+    33.7568879128
+    import itertools; set(itertools.imap(str.strip, ['wat '] * 200))
+    35.9931280613
+
+No clear benefit for use of ``imap`` or generators.
