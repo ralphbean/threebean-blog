@@ -36,3 +36,17 @@ another::
     measure("set([s.strip() for s in ['wat '] * 200])")
 
 Admission:  Pierre bullied me into blogging about this!
+
+----
+
+**UPDATE**: Folks in the comments recommended using a generator or
+``itertools.imap``.  The results are *significantly* better.  Here they are::
+
+    import itertools; [s.strip() for s in ['wat '] * 200]
+    28.2224271297
+    import itertools; (s.strip() for s in ['wat '] * 200)
+    3.0280148983
+    import itertools; map(str.strip, ['wat '] * 200)
+    25.7294211388
+    import itertools; itertools.imap(str.strip, ['wat '] * 200)
+    2.3925549984
