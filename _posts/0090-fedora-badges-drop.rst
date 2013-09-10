@@ -57,13 +57,13 @@ FWIW, ``zodbot`` also got a ``.badges FAS_USER`` command now, too::
    :width: 256px
 
 Lots of people have asked if they can embed their badges on their own blog or
-on the wiki Our frontend app doesn't provide the tools directly, but we do
+on the wiki or frontend app doesn't provide the tools directly, but we do
 allow you to export your badges to Mozilla's `Open Badges Backpack
 <http://backpack.openbadges.org>`_ and *they* provide `some tools for embedding
 your badges elsewhere
 <https://github.com/mozilla/openbadges/wiki/Open-Badges-related-widgets>`_.
 
-Our *our* badges app, click the *Export Badges* button on your profile, login
+On *our* badges app, click the *Export Badges* button on your profile, login
 via Mozilla's "Persona" with your ``FASUSERNAME@fedoraproject.org`` email
 address, and create custom badge displays there.
 
