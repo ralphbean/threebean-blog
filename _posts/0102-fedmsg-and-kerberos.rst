@@ -79,11 +79,11 @@ Steps 2-6 are carried out independantly by programs.
 Kerberized fedmsg?
 ------------------
 
-The advantage of pulling of a kerberized fedmsg would be that you wouldn't have
-to set up a separate public key infrastructure just for fedmsg -- you could
-re-use your kerberos infrastructure.  You wouldn't have to generate a CA cert.
-You wouldn't have to generate certs for each sending service, sign them with
-the CA cert, and distribute them, manage them...
+The advantage of pulling off a kerberized fedmsg would be that you wouldn't
+have to set up a separate public key infrastructure just for fedmsg -- you
+could re-use your kerberos infrastructure.  You wouldn't have to generate a CA
+cert.  You wouldn't have to generate certs for each sending service, sign them
+with the CA cert, and distribute them, manage them...
 
 Is it possible?
 
