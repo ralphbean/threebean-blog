@@ -133,15 +133,39 @@ h1 {
     padding: 2px;
 }
 
-.twitter-box {
+#datagrepper-widget {
     display: none;
     position: absolute;
     right: 0px;
     width: 300px;
+    font-size: 90%;
+}
+
+#datagrepper-widget img {
+    width:24px;
+    height:24px;
+    vertical-align: middle;
+}
+#datagrepper-widget p {
+    display: inline;
+}
+#datagrepper-widget .message-card {
+    margin-top: 4px;
+    padding-top: 3px;
+    border-top: 1px solid gray;
+}
+#datagrepper-widget .datetime {
+    color: #7a7a7a;
+    font-weight: bold;
+    font-size: 75%;
+    vertical-align: middle;
+}
+#datagrepper-widget a:hover {
+    background: none;
 }
 
 @media all and (min-width: 1000px) {
-    .twitter-box {
+    #datagrepper-widget {
         display: block;
     }
 }
