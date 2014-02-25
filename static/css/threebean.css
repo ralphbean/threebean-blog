@@ -51,7 +51,8 @@ html, body {
         height: 100%;
         font-family: Helvetica Neue, Arial, sans-serif;
 }
-li { list-style-type: lower-roman; }
+
+li { list-style-type: decimal; }
 
 .highlight {
     color: #D01A55;
