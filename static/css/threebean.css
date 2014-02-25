@@ -17,7 +17,7 @@ p {
         margin: 9px;
 }
 
-div#main_block img {
+div#document img {
         width: 690px;
         display: block;
         margin-left: auto;
@@ -142,7 +142,7 @@ h1 {
     font-size: 90%;
 }
 
-#datagrepper-widget img {
+#datagrepper-widget .message-card img {
     width:24px;
     height:24px;
     vertical-align: middle;
