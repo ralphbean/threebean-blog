@@ -107,3 +107,9 @@ you have them.  Hit me up in ``#fedora-apps`` on freenode or on the
 `messaging-sig
 <https://lists.fedoraproject.org/mailman/listinfo/messaging-sig>`_ if you want
 to talk more about it.
+
+----
+
+**UPDATE** - 2014-02-25, `Simo Sorce <https://ssimo.org/>`_ tells me that
+``kx509`` is a thing that could be used to acquire a short-lived certificate as
+long as you have a TGT.  Apparently it needs some work first, though.
