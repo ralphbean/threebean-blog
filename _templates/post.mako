@@ -13,7 +13,6 @@
            category_links.append("<a href='%s'>%s</a>" % (category.path, category.name))
 %>
 ${", ".join(category_links)}
-<a href="${post.permalink}#disqus_thread">View Comments</a>
 </small><p/>
 
   <div class="post_prose">
@@ -21,8 +20,6 @@ ${", ".join(category_links)}
   </div>
 
 <span>
-  <small><a href="${post.permalink}#disqus_thread">View Comments</a></small><br/>
-
   <iframe style="border: 0; margin: 0; padding: 0;"
           src="https://www.gittip.com/ralphbean/widget.html"
           width="48pt" height="22pt"></iframe>
