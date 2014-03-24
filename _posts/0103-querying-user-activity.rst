@@ -14,16 +14,16 @@ queries -- it also comes with a `nice HTML output
 example output from the console::
 
     ~❯ ./userwat ralph
-    2014-03-24T00:15:30 bodhi.update.request.stable ralph submitted datagrepper-0.4.0-2.el6 to stable https://admin.fedoraproject.org/updates/datagrepper-0.4.0-2.el6
-    2014-03-24T00:15:28 bodhi.update.request.stable ralph submitted python-fedbadges-0.4.1-1.el6 to stable https://admin.fedoraproject.org/updates/python-fedbadges-0.4.1-1.el6
-    2014-03-24T00:15:28 bodhi.update.request.stable ralph submitted python-taskw-0.8.1-1.el6 to stable https://admin.fedoraproject.org/updates/python-taskw-0.8.1-1.el6
-    2014-03-24T00:15:27 bodhi.update.request.stable ralph submitted python-tahrir-api-0.6.0-2.el6 to stable https://admin.fedoraproject.org/updates/python-tahrir-api-0.6.0-2.el6
-    2014-03-24T00:15:27 bodhi.update.request.stable ralph submitted python-fedbadges-0.4.0-1.el6 to stable https://admin.fedoraproject.org/updates/python-fedbadges-0.4.0-1.el6
-    2014-03-23T13:51:16 trac.ticket.update ralph updated a ticket on the fedora-badges trac instance https://fedorahosted.org/fedora-badges/ticket/122
-    2014-03-21T17:08:21 ansible.playbook.complete ralph's packages.yml playbook run completed None
-    2014-03-21T17:03:38 ansible.playbook.start ralph started an ansible run of packages.yml None
-    2014-03-21T16:31:48 trac.ticket.update ralph updated a ticket on the fedora-badges trac instance https://fedorahosted.org/fedora-badges/ticket/213
-    2014-03-21T15:09:10 buildsys.tag ralph's python-bugzilla2fedmsg-0.1.3-1.el6 tagged into dist-6E-epel-testing by bodhi http://koji.fedoraproject.org/koji/taginfo?tagID=137
+    2014-03-24T00:15:30 ralph submitted datagrepper-0.4.0-2.el6 to stable https://admin.fedoraproject.org/updates/datagrepper-0.4.0-2.el6
+    2014-03-24T00:15:28 ralph submitted python-fedbadges-0.4.1-1.el6 to stable https://admin.fedoraproject.org/updates/python-fedbadges-0.4.1-1.el6
+    2014-03-24T00:15:28 ralph submitted python-taskw-0.8.1-1.el6 to stable https://admin.fedoraproject.org/updates/python-taskw-0.8.1-1.el6
+    2014-03-24T00:15:27 ralph submitted python-tahrir-api-0.6.0-2.el6 to stable https://admin.fedoraproject.org/updates/python-tahrir-api-0.6.0-2.el6
+    2014-03-24T00:15:27 ralph submitted python-fedbadges-0.4.0-1.el6 to stable https://admin.fedoraproject.org/updates/python-fedbadges-0.4.0-1.el6
+    2014-03-23T13:51:16 ralph updated a ticket on the fedora-badges trac instance https://fedorahosted.org/fedora-badges/ticket/122
+    2014-03-21T17:08:21 ralph's packages.yml playbook run completed
+    2014-03-21T17:03:38 ralph started an ansible run of packages.yml
+    2014-03-21T16:31:48 ralph updated a ticket on the fedora-badges trac instance https://fedorahosted.org/fedora-badges/ticket/213
+    2014-03-21T15:09:10 ralph's python-bugzilla2fedmsg-0.1.3-1.el6 tagged into dist-6E-epel-testing by bodhi http://koji.fedoraproject.org/koji/taginfo?tagID=137
 
 The tool isn't packaged at all, but here's the script if you'd like to copy and
 use it::
@@ -66,7 +66,7 @@ use it::
 
             for msg in results['raw_messages']:
                 print format_date(msg['timestamp']),
-                print msg['meta']['title'],
+                #print msg['meta']['title'],
                 print msg['meta']['subtitle'],
                 print msg['meta']['link']
 
