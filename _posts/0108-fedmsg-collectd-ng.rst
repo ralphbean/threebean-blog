@@ -25,7 +25,7 @@ to pull all that information in for visualization.  Take a look:
 
 Here's the "backlog" of the `Fedora Badges <https://badges.fedoraproject.org>`_
 backend.  It is a graph of how many messages have arrived in its internal
-queue, but that it has not dealt with yet.  Smaller numbers are better here.
+queue, but that it has not yet dealt with.  Smaller numbers are better here.
 As you can see, the badges awarder mostly stays on top of its workload.  It can
 award badges almost as rapidly as it is notified of events.
 
@@ -36,7 +36,7 @@ Here is the same graph for `summershum
 <https://lists.fedoraproject.org/pipermail/infrastructure/2014-February/014059.html>`_.
 It is a daemon that watches the bus, and when new source tarballs are uploaded
 to the lookaside cache, it downloads them, extracts the contents, and then
-computes and stores hashes of all the source files.  There graph here has a
+computes and stores hashes of all the source files.  The graph here has a
 different profile.  Lookaside uploads occur relatively infrequently, but when
 they do occur summershum undertakes a significant workload:
 
