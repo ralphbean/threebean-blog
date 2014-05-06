@@ -24,6 +24,7 @@ Here's the example from the `datagrepper docs <https://apps.fedoraproject.org/da
         <p>Here is my latest Fedora activity:</p>
 
         <script
+          id="datagrepper-widget"
           src="https://apps.fedoraproject.org/datagrepper/widget.js?css=true"
           data-user="ralph"
           data-rows_per_page="40">
@@ -48,6 +49,7 @@ different kinds of queries.  For instance, the following would render a widget
 showing only Bodhi events about the Firefox package::
 
     <script
+      id="datagrepper-widget"
       src="https://apps.fedoraproject.org/datagrepper/widget.js?css=true"
       data-category="bodhi"
       data-package="firefox"
@@ -68,6 +70,7 @@ You can make queries about all the fedmsg topics (see the fedmsg docs for the
 the latest `Fedora Badges <https://badges.fedoraproject.org>`_ awards::
 
     <script
+      id="datagrepper-widget"
       src="https://apps.fedoraproject.org/datagrepper/widget.js?css=true"
       data-topic="org.fedoraproject.prod.fedbadges.badge.award"
       data-rows_per_page="40">

@@ -16,6 +16,7 @@
 </script>
 
 <script
+ id="datagrepper-widget"
  src="https://apps.fedoraproject.org/datagrepper/widget.js?css=false"
  data-user="ralph"
  data-rows_per_page="30">
