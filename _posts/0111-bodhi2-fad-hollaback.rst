@@ -8,7 +8,7 @@ title: Bodhi2 FAD Reportback
 In case you missed it, the `Bodhi2 FAD
 <https://fedoraproject.org/wiki/FAD_Bodhi2_Taskotron_2014>`_ was last week.
 
-Here's a quick rundown of the things I was able to contribut:
+Here's a quick rundown of the things I was able to contribute:
 
 - Each URL in Bodhi2 (any page you look at in the web URL) will also be an api
   endpoint for JSON and JSONP.  This should hopefully make it easier to deduce
