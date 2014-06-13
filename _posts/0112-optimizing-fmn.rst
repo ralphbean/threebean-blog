@@ -1,6 +1,6 @@
 ---
 categories: fedora, fedmsg, fmn
-date: 2014/06/13 16:45:00
+date: 2014/06/13 16:50:00
 permalink: http://threebean.org/blog/optimizing-fmn
 title: Optimizing "Fedora Notifications"
 ---
