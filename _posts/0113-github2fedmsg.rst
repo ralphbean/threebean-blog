@@ -18,7 +18,9 @@ Please check it out and `let us know
 The regular fedmsg topics documentation shows examples of just `what kinds of
 messages get rebroadcasted
 <http://fedora-fedmsg.readthedocs.org/en/latest/topics.html>`_, so you can read
-all about that there if you like.
+all about that there if you like.  The site has a neat dashboard that let's you
+toggle all of your various repos on and off -- you have control over which of
+your projects get published and which don't.
 
 I know there's concern out there about building any kind of dependency between
 our infrastructure and proprietary stacks like GitHub, Inc.  This new GitHub
