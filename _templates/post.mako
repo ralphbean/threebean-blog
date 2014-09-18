@@ -22,10 +22,6 @@ ${", ".join(category_links)}
 
 <span>
   <small><a href="${post.permalink}#disqus_thread">View Comments</a></small><br/>
-
-  <iframe style="border: 0; margin: 0; padding: 0;"
-          src="https://www.gittip.com/ralphbean/widget.html"
-          width="48pt" height="22pt"></iframe>
 </span> <!-- float right -->
 </div>
 
