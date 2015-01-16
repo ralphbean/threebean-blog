@@ -7,8 +7,10 @@ title: New FMN Release -- Improved Default Preferences
 
 It's been a while coming but this past week I released and deployed a new cut
 of `FMN, Fedora's Fedmsg Notification system
-<https://apps.fedoraproject.org/notifications>`_ (it's a neat webapp ).  The release is full of bug
-fixes and little feature enhancements, I'll talk about a few here:
+<https://apps.fedoraproject.org/notifications>`_ (it's a neat webapp that can
+send you notifications of events as they happen throughout Fedora
+Infrastructure).  The release is full of bug fixes and little feature
+enhancements, I'll talk about a few here:
 
 - **New defaults** - this is the big one.  The default settings were the
   biggest issue raised by early adopters.  The complaints fell along two main
