@@ -1,7 +1,7 @@
 ---
 categories: fedora, fmn, fedmsg
-date: 2015/01/16 11:45:00
-permalink: http://threebean.org/blog/new-fmn-release
+date: 2015/01/16 13:05:00
+permalink: http://threebean.org/blog/latest-fmn-release
 title: New FMN Release -- Improved Default Preferences
 ---
 
