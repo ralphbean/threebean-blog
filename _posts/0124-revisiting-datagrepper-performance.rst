@@ -1,7 +1,7 @@
 ---
 categories: fedora, datagrepper, datanommer, postgres, fedmsg
 date: 2015/02/27 12:30:00
-permalink: http://threebean.org/blog/revisiting-datagrepper-performancelatest-fmn-release
+permalink: http://threebean.org/blog/revisiting-datagrepper-performance
 title: Revisiting Datagrepper Performance
 ---
 
