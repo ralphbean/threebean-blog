@@ -10,9 +10,10 @@ In Fedora Infrastructure, we run a service somewhat-hilariously called
 make queries over HTTP about the history of our `message bus
 <http://fedmsg.com>`_.  (The service that feeds the database is called
 `datanommer <https://github.com/fedora-infra/datanommer>`_.) We recently
-crossed the mark of `20 million <https://apps.fedoraproject.org/datagrepper>`_
-in the store, and the thing still works but it has become noticeably slower
-over time.  This affects other dependant services:
+crossed the mark of `20 million messages
+<https://apps.fedoraproject.org/datagrepper>`_ in the store, and the thing
+still works but it has become noticeably slower over time.  This affects other
+dependant services:
 
 - The `releng dashboard <https://apps.fedoraproject.org/releng-dash>`_ and
   others make HTTP queries to datagrepper.
