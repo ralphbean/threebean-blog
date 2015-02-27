@@ -13,7 +13,7 @@ make queries over HTTP about the history of our `message bus
 crossed the mark of `20 million messages
 <https://apps.fedoraproject.org/datagrepper>`_ in the store, and the thing
 still works but it has become noticeably slower over time.  This affects other
-dependant services:
+dependent services:
 
 - The `releng dashboard <https://apps.fedoraproject.org/releng-dash>`_ and
   others make HTTP queries to datagrepper.
