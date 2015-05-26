@@ -11,8 +11,8 @@ but it has gotten to the point that it deserves an introduction.
 
 A little preamble:  the `Fedora Infrastructure team
 <http://fedoraproject.org/wiki/Infrastructure>`_ runs `~40 web services
-<https://apps.fedoraproject.org/>`_ which facilitate the production of the
-actual OS by the community.  Community ongoings are channeled through irc
+<https://apps.fedoraproject.org/>`_.
+Community ongoings are channeled through irc
 meetings (for which we have `a bot <http://fedoraproject.org/wiki/Zodbot>`_),
 `wiki pages <https://fedoraproject.org/wiki>`_ (which we host), and more.
 Packages are built in our `buildsystem <http://koji.fedoraproject.org>`_.  QA
@@ -20,9 +20,9 @@ feedback goes through lots of channels, but particularly the `updates system
 <https://admin.fedoraproject.org/updates>`_. There are lots of systems with
 many heterogenous interfaces.  About three years ago, we started linking them
 all together with `a common message bus <http://fedmsg.com>`_ on the backend
-and this has granted us a handful of advantages.  One of them is that we have a
-common history for all Fedora development activity (and to a lesser extent,
-community activity).
+and this has granted us a handful of advantages.  One of them is that we now
+have a common history for all Fedora development activity (and to a lesser
+extent, community activity).
 
 There is a `web interface <https://apps.fedoraproject.org/datagrepper>`_ to
 this common history called datagrepper.  Here are some example queries to get
