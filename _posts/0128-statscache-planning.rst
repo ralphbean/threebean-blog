@@ -53,7 +53,7 @@ the page and we've already put `some tweaks
 try to make it incrementally faster.  We need a new architecture.
 
 **Enter statscache**.  The releng dash is pulling raw data from the server to
-the browser, and then computing some 'latest values' from them to display.  Why
+the browser, and then computing some 'latest values' from there to display.  Why
 don't we compute and cache those latest values in a server-side service
 instead?  This way they'll be ready and available for snappy delivery to web
 clients and we won't have to stress out the master archive DB with all those
