@@ -35,7 +35,7 @@ corners.  Just check out the `Fedora Tagger
 .. image:: http://threebean.org/fedoratagger-usage-2013-08-27.svg
 
 To generate the above chart, I wrote a little tool which you can find `here
-<https://github.com/ralphbean/fedora-stats-tools>`_.  It uses the `datagrepper
+<https://github.com/fedora-infra/fedora-stats-tools>`_.  It uses the `datagrepper
 API <https://apps.fedoraproject.org/datagrepper>`_, about which I've `written
 before <http://threebean.org/blog/category/datagrepper/>`_.
 
