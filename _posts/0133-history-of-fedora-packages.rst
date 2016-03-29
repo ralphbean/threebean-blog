@@ -164,7 +164,7 @@ Second, the bugzilla connector can't work like this yet because we don't yet
 have bugzilla events on our message bus.  Zod-willing, we'll have them in
 January 2016 and we can flip that part on.  The bugs tab will be slower than we
 like until then.  **UPDATE**:  We got `bugzilla on the bus
-<https://lists.fedoraproject.org/archives/list/infrastructure@lists.fedoraproject.org/thread/TM2HW4V3NT5PW4LW5PNYPO4LRBLUIBDF/>`
+<https://lists.fedoraproject.org/archives/list/infrastructure@lists.fedoraproject.org/thread/TM2HW4V3NT5PW4LW5PNYPO4LRBLUIBDF/>`_
 at the end of March, 2016.
 
 Looking forwards
