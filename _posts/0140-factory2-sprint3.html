@@ -1,0 +1,86 @@
+---
+categories: fedora, factory2, sprint
+date: 2016/11/08 19:34:59
+permalink: http://threebean.org/blog/factory-2.0,-sprint-3-report/
+title: Factory 2.0, Sprint 3 Report
+---
+
+<p>This was our first full sprint with the new team!  Welcome, Jan Kaluza,
+Courtney Pacheco, Vera Karas, and Stanislav Ochotnicky.  We're glad to have
+Filip Valder join us in sprint 4 starting today.</p>
+<p>Our top priority in sprint 3 was making sure that the <a class="reference external" href="https://fedoraproject.org/wiki/BaseRuntime/FAQ">base runtime team</a> isn't blocked.  They have a
+big job ahead of themselves to curate and build a collection of base modules at
+the core of the distro, and they need to use our prototype build tooling to do
+it.  Anytime they're blocked, the Factory 2.0 team is trying to chase down the
+solution -- fixing tracebacks and developing new features.  Cheers to Matt
+Prahl and Jan Kaluza for staying on top of this.</p>
+<p>Meanwhile, we're continuing apace with the Dependency Chain and Deserialization
+epics that we originally scheduled for work this quarter.  Mike Bonnet has been
+chasing down difficult technical pre-requisites for the later (message bus
+enablement), Matt Prahl demoed his dependency chain web UI, and Courtney
+Pacheco is giving shape to our metrics project (so we can have some confidence
+that future pipeline changes we make actually improve the state of affairs).</p>
+<p>As always, we're double-tasked with laying the groundwork for work in future
+quarters.  Thanks to Stanislav Ochotnicky for starting the conversation with
+Platform representatives about workflow changes and continuous integration, and
+thanks to all those who participated in this round of resultsdb/CI discussions.</p>
+
+<h2>f26-changes, by threebean</h2>
+
+<p>Here I talk about the <a class="reference external" href="https://fedoraproject.org/wiki/Changes/Policy">Change</a>
+proposals we've filed with <a class="reference external" href="https://fedoraproject.org/wiki/Fedora_Engineering_Steering_Committee">FESCo</a>
+for the Fedora 26 release.</p>
+<ul class="simple">
+<li>There's one on the <a class="reference external" href="https://fedoraproject.org/wiki/Changes/ModuleBuildService">module-build-service</a>.</li>
+<li>And another on <a class="reference external" href="https://fedoraproject.org/wiki/Changes/ModularCompose">changes to the compose tooling</a>.</li>
+</ul>
+<p>I talk about this in the video, but the changes are designed specifically to
+limit the amount of risk we impose on the rest of the release process and the
+Modularity initiative.  We can use the F26 release to assess the viability of
+Modularity and decide then how far we want to go in the Fedora 27 timeframe.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-003//threebean-f26-changes.ogv"/>
+</video></p>
+
+
+<h2>mbs-mock-backend, by jkaluza</h2>
+
+<p>In this demo I describe what is Mock Builder and why it is useful to
+Module Build Service. I also show it in action briefly.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-003//jkaluza-mbs-mock-backend.ogv"/>
+</video></p>
+
+
+<h2>pdc-tangle-web, by mprahl</h2>
+
+<p>In this demo I talk about an Angular2 web app I wrote called <a class="reference external" href="https://github.com/product-definition-center/pdc-tangle-web">PDC Tangle Web</a>. The app queries PDC based on the user's search criteria to show an artifact's dependencies. This is a beta version, so please keep in mind more features will come, but feel free to make suggestions on GitHub for what you'd like to see added.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-003//mprahl-pdc-tangle-web.mp4"/>
+</video></p>
+
+
+<h2>resultsdb, by threebean</h2>
+
+<p>This one's just pointing you to a <a class="reference external" href="http://threebean.org/blog/all-hail-resultsdb/">blog post</a> that is a transcription of an
+internal document on resultsdb and our plans for it.</p>
+<p>I know that showing off a blog post isn't all that exciting, but I'm glad we've
+gotten to this point.  It is the product of a long process of discussion and
+eventual agreement.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-003//threebean-resultsdb.ogv"/>
+</video></p>
+
+
