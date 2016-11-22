@@ -1,0 +1,128 @@
+---
+categories: fedora, factory2, sprint
+date: 2016/11/22 13:29:56
+permalink: http://threebean.org/blog/factory-2-sprint-4/
+title: Factory 2, Sprint 4 Report
+---
+
+<p>Work continues on Factory 2.0...</p>
+<p>Recall that we have 1000 different problems we're trying to solve, but we're
+attempting to focus on an isolated subset for now: problems we've picked so
+that their solutions can enable higher-level problem solving in the coming
+months.  The work currently includes a focus on:</p>
+<ul class="simple">
+<li>Preparing elementary build infrastructure for the Fedora 26 Alpha release.</li>
+<li>Deserializing pipeline processes that could be done more quickly in parallel.</li>
+<li>Building a dependency chain database, so that we can build smarter rebuild
+automation and pipeline analytics.</li>
+<li>Monitoring pipeline performance metrics, so that as we later improve things
+we can be sure we had an effect.</li>
+</ul>
+<p>Overall, I'm happy with the work output of this sprint, but there are complications.</p>
+<ul class="simple">
+<li>We made significant progress on the module build infrastructure.  The stack
+is maturing - the number of new features will be slowing as we start to
+prepare it for production for F26.  Our proposals were approved by FESCo last
+week.  We still have a long way to go, but we're currently on target to build
+an F26 Edition out of the base modules.
+Status:  Green.</li>
+<li>Our deserialization effort hit some roadbumps as we negotiate how to interface with
+existing test-execution environments.  We're not blocked at the moment and
+are in dialogue with our partners.  We will slip a few weeks on our MvP
+deliverable here.
+Status:  Yellow.</li>
+<li>The dependency chain MvP is ready for deployment efforts in Sprint 5.  We
+underestimated how this work would depend on other message bus enablement
+pre-requisites, which has pushed our delivery date back a few weeks.
+Status:  Yellow.</li>
+<li>Our performance metrics work is progressing, but much more slowly than we had
+initially expected.  We promised a delivery date of Dec. 1st for this, but we
+will miss it by a wide margin and need to adjust expectations.  The primary
+factor is that the metrics are just more complex than we anticipated.  The
+pipeline is complex, therefore exacting meaningful measurements is complex.  A
+separate factor is some unpredictability with write-access to the integration
+lab's ELK instance we are depending on.  The delay in work here does not
+block our other efforts.
+Status:  Red.</li>
+</ul>
+
+
+
+<h2>mbs-build-profiles, by threebean</h2>
+
+<p>Here we show how we're re-using the &quot;installation profiles&quot; feature of
+modulemd to define the buildsystem &quot;build groups&quot; for a module.  It's a
+natural extension of the install profiles metadata which furthmore helps
+unblock the base-runtime team in their quest to produce the first
+<a class="reference external" href="https://communityblog.fedoraproject.org/base-runtime-generational-core/">generational core</a>!</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//threebean-mbs-build-profiles.ogv"/>
+</video></p>
+
+
+<h2>mbs-config, by fivaldi</h2>
+
+<p>In this video I'm trying to explain changes in configuration internals
+of Module Build Service. This aims to split configuration data/logic so
+that it will be simplier to use and understand for contributors/users.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//fivaldi-mbs-config.ogv"/>
+</video></p>
+
+
+<h2>modulemd1-mock, by jkaluza</h2>
+
+<p>In this demo I inform about the support of modulemd-1.0 format in Module
+Build Service, describes the build-order feature and shows how the module
+using this feature builds using the mock builder.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//jkaluza-modulemd1-mock.ogv"/>
+</video></p>
+
+
+<h2>resultsdb-updater, by mprahl</h2>
+
+<p>This video shows the new microservice ResultsDB-Updater which listens on the CI message bus for test results and adds them to ResultsDB.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//mprahl-resultsdb-updater.mp4"/>
+</video></p>
+
+
+<h2>umb-brew, by mikeb</h2>
+
+<p>A demo of message publication from Brew to the Unified Message Bus.
+Explains the <a class="reference external" href="https://docs.google.com/document/d/1x8GnLRMK58VSvroYvDNbZnaXiXzm8p_0-_h8i4fKiw0/edit">topic hierarchy</a>
+and the message format.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//mikeb-umb-brew.ogv"/>
+</video></p>
+
+
+<h2>umb-dist-git-demo, by mikeb</h2>
+
+<p>A demo showing the publication of messages from a dist-git repo to the
+Unified Message Bus. Shows how the repos are configured for publication
+on the server side, and explains a little bit about message format.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-004//mikeb-umb-dist-git-demo.ogv"/>
+</video></p>
+
+
