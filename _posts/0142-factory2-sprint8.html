@@ -1,0 +1,115 @@
+---
+categories: fedora, factory2, sprint
+date: 2017/01/16 17:06:19
+permalink: http://threebean.org/blog/factory-2-sprint-8/
+title: Factory 2, Sprint 8 Report
+---
+
+<p>Happy New Year from the Factory 2.0 team.</p>
+<p>Here's a reminder of our current priorities.  We are:</p>
+<ul class="simple">
+<li>Preparing elementary build infrastructure for the Fedora 26 Alpha release.</li>
+<li>Deserializing pipeline processes that could be done more quickly in parallel.</li>
+<li>Building a dependency chain database, so that we can build smarter rebuild
+automation and pipeline analytics.</li>
+<li>Monitoring pipeline performance metrics, so that as we later improve things
+we can be sure we had an effect.</li>
+</ul>
+<p>We are on track with respect to three of the four priorities:  module build
+infrastructure will be ready before the F26 Alpha freeze.  Our VMs are
+provisioned, we're working through the packaging rituals, and we'll be ready
+for an initial deployment shortly after <a class="reference external" href="https://devconf.cz">devconf</a>.
+Internally, our MvP of resultsdb and resultsdb-updater are working and pulling
+data from some early-adopter Platform Jenkins masters and our internal
+performance measurement work is bearing fruit slowly but steadily: we have two
+key metrics updating automatically on our kibana dashboard, with two more in
+progress to be completed in the coming sprints.</p>
+<p>We have made a conscious decision to put our work on the internal depedency
+chain database on hold. We're going to defer our deployment to production for a
+few months to ensure that our efforts don't collide with a separate release
+engineering project ongoing now.</p>
+<p>Tangentially, we're glad to be assisting with the adoption of
+<a class="reference external" href="https://pagure.io/robosignatory">robosignatory</a> for automatic rpm signing.
+It's an excellent example of upstream/downstream cooperation between the Fedora
+and RHEL services teams.</p>
+
+
+
+<h2>mbs-optimization, by jkaluza</h2>
+
+<p>This demo shows optimizations of module build in module build service comparing
+the diagrams from old and new version of MBS.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-008//jkaluza-mbs-optimization.ogv"/>
+</video></p>
+
+
+<h2>resultsdb-updater-pdc-updater-updates, by mprahl</h2>
+
+<p>This demo shows the changes in ResultsDB-Updater and how it reflects in ResultsDB. Additionally,
+progress is shown on pdc-updater working internally.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-008//mprahl-resultsdb-updater-pdc-updater-updates.mp4"/>
+</video></p>
+
+<h2>developers-instance, by fivaldi</h2>
+
+<p>In this video, I am presenting local devleoper's instance of MBS using
+docker-compose. The aim is to provide the simplest way of a custom MBS
+instance for dev/testing purposes. At the end, I'm showing how to submit
+a testing module build.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-006//fivaldi-developers-instance.ogv"/>
+</video></p>
+
+
+<h2>fedpkg-pdc-modulemd, by jkaluza</h2>
+
+<p>This demo shows the newly implemented &quot;fedpkg module-build&quot; command workflow
+and improved storage of module metadata in the PDC.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-006//jkaluza-fedpkg-pdc-modulemd.ogv"/>
+</video></p>
+
+
+<h2>mbs-scheduler-and-resultsdb-prod, by mprahl</h2>
+
+<p>This demo briefly explains the changes in the Module Build Service scheduler to use fedmsg's &quot;Hub-Consumer&quot; approach.
+Additionally, ResultsDB is briefly shown in production with results populated from ResultsDB-Updater.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-006//mprahl-mbs-scheduler-and-resultsdb-prod.mp4"/>
+</video></p>
+
+
+<h2>module-checks-in-taskotron, by threebean</h2>
+
+<p>In this demo, I show how we've wrapped elementary tests produced by the
+base-runtime team so that they can be executed and managed by the taskotron CI
+system in place in Fedora Infrastructure.  Benefits include:</p>
+<ul class="simple">
+<li>No lock-in to taskotron.  Jenkins-job-builder could wrap the core test in a similar way.</li>
+<li>An avocado-to-resultsdb translator is written which will be generally useful in future sprints.</li>
+</ul>
+<p>Work on taskotron-trigger to automatically respond to dist-git events was
+implemented and merged upstream, but is pending a release and deployment.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-006//threebean-module-checks-in-taskotron.ogv"/>
+</video></p>
