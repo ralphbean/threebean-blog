@@ -34,5 +34,6 @@
  id="datagrepper-widget"
  src="https://apps.fedoraproject.org/datagrepper/widget.js?css=false"
  data-user="ralph"
+ data-delta="927800"
  data-rows_per_page="30">
 </script>
