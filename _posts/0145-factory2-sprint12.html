@@ -1,0 +1,52 @@
+---
+categories: fedora, factory2, sprint
+date: 2017/03/24 16:46:49
+permalink: http://threebean.org/blog/factory-2,-sprint-12/
+title: Factory 2, Sprint 12
+---
+
+<p>Late report here.  This sprint actually concluded two weeks ago.  We did a
+combined demo with the Modularity and base-runtime teams, but never published
+our stuff independently.  Better late than never; here it is!</p>
+
+
+
+<h2>mbs-in-production, by threebean</h2>
+
+<p>In this demo I show the Module Build Service in its initial deployment to
+production, showing how to query the API and how to submit a new module build.</p>
+<p>At the request of FESCo, use of the MBS is locked down to only members of the
+Modularity Working Group until we have an FPC approved module review process in
+place in the F27 timeframe.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-012//threebean-mbs-in-production.ogv"/>
+</video></p>
+
+
+<h2>multiple_submit_same_nvr, by fivaldi</h2>
+
+<p>When someone tries to submit the module build and some components
+are submitted for a build and the module build fails but the submitted
+components are not removed from the Koji, there can be a situation where
+the same module and component is submitted for a build for second time,
+but the first Koji build of this component finishes before the second one.
+This video presents how this is handled via requests to Koji API.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-012//fivaldi_multiple_submit_same_nvr.ogv"/>
+</video></p>
+
+
+<h2>pungi_modular_compose, by jkaluza</h2>
+
+
+<p><video width="600" height="350" controls="controls" autobuffer="autobuffer">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-012//jkaluza_pungi_modular_compose.ogv"/>
+</video></p>
+
+
