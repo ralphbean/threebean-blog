@@ -1,0 +1,54 @@
+---
+categories: fedora, factory2, sprint
+date: 2017/04/11 15:37:25
+permalink: http://threebean.org/blog/factory-2,-sprint-14/
+title: Factory 2, Sprint 14
+---
+
+<p>Hello all.  Bi-weekly update from the Factory 2 team on our work here.  We have three videos this sprint.</p>
+<p>Two are related to the module-build-service: both on submitting builds.  We
+have some new client tooling to show which should make manual submission and
+monitoring of module-builds much simpler.  The second is a demo of an early
+prototype of our <a class="reference external" href="https://fedoraproject.org/wiki/Infrastructure/Factory2/Focus/Freshmaker">continuous rebuild system</a>.</p>
+<p>Additionally, we have a demo of some early prototype work for the <a class="reference external" href="https://fedoraproject.org/wiki/Infrastructure/Factory2/Focus/ArbitraryBranching">arbitrary
+branching</a>
+proposal that we <a class="reference external" href="https://www.youtube.com/watch?v=5gqccjyjwFk">talked about at DevConf</a> back in February.</p>
+
+
+
+<h2>coco-module-rebuild, by jkaluza</h2>
+
+<p>This demo shows initial prototype of Continuos Compose Service and first
+use-case: Rebuild of module in Module Build Service as a result of update of
+module definition in dist-git.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" preload="none">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-014//jkaluza-coco-module-rebuild.ogv"/>
+</video></p>
+
+
+<h2>mbs-build, by jkaluza</h2>
+
+<p>This demo shows new 'mbs-build' command which can be used to submit and manage
+Module Build Service builds.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" preload="none">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-014//jkaluza-mbs-build.ogv"/>
+</video></p>
+
+
+<h2>pdc-sla-apis, by mprahl</h2>
+
+<p>This demo shows an API developed to store SLA and EOL information on package branches in Product Definition Center (PDC). The API would act as a gold source for other tools that need to make decisions based on this information. The code shown in this demo is in review and could change before it makes it to master.</p>
+
+
+
+<p><video width="600" height="350" controls="controls" preload="none">
+  <source src="https://fedorapeople.org/groups/factory2/sprint-014//mprahl-pdc-sla-apis.mp4"/>
+</video></p>
+
+
