@@ -86,7 +86,7 @@ compose from a few days ago and focus in on just one phase::
 That ``createrepo`` phase is gigantic!
 
 After `one <https://pagure.io/pungi-fedora/pull-request/341>`_ or `two
-<https://pagure.io/pungi-fedora/pull-request/340>_` patches we were able to get
+<https://pagure.io/pungi-fedora/pull-request/340>`_ patches we were able to get
 it down a little tighter the next day::
 
 	#!bash
@@ -101,5 +101,5 @@ it down a little tighter the next day::
 The next one that jumps out at me is the ``pkgset`` phase.  What's going on there?
 
 I'm not sure yet but have `posted a patch
-<https://pagure.io/pungi/pull-request/724>_` introducing more logging so we can
+<https://pagure.io/pungi/pull-request/724>`_ introducing more logging so we can
 get a feel for it.
